@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DISCRETE | The Art of Being Seen Without Being Loud</title>
+    <link rel="icon" type="image/png" href="logo.png">
+
+    <!-- FONTS — preconnect must come before the stylesheet -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- PRELOAD first hero image -->
+<link rel="preload" as="image" href="images/hero1.webp" fetchpriority="high">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/storefront.css">
+
+    <style id="storefront-additions">
+/* =====================================================================
+   STOREFRONT ADDITIONS — all new classes are prefixed sf- so they never
+   collide with css/styles.css. Colours inherit from the page where possible.
+   ===================================================================== */
+
+/* ---------- shared ---------- */
+.sf-wrap{padding:clamp(48px,7vw,96px) clamp(16px,4vw,48px)}
+.sf-btn{display:inline-block;padding:14px 28px;border:1px solid currentColor;background:transparent;color:inherit;font:700 12px 'Space Mono',monospace;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:background .25s,color .25s}
+.sf-btn:hover{background:#fff;color:#000}
+.sf-linklike{background:none;border:0;padding:0;color:inherit;font:inherit;letter-spacing:inherit;text-transform:inherit;text-decoration:underline;cursor:pointer}
+.sf-wrap a:focus-visible,.sf-wrap button:focus-visible,.sf-footer-extra a:focus-visible,.sf-footer-extra button:focus-visible,
+.sf-cookie button:focus-visible,.sf-wish-panel button:focus-visible,.sf-cookie-panel button:focus-visible{outline:2px solid #ff3b5c;outline-offset:3px}
+
+/* ---------- category grid ---------- */
+.sf-cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.sf-cat-card{position:relative;display:block;aspect-ratio:4/5;overflow:hidden;background:#111;color:#fff;text-decoration:none}
+.sf-cat-card img{width:100%;height:100%;object-fit:cover;filter:grayscale(.25);transition:transform .6s ease,filter .6s ease}
+.sf-cat-card:hover img,.sf-cat-card:focus-visible img{transform:scale(1.06);filter:none}
+.sf-cat-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.78))}
+.sf-cat-label{position:absolute;left:18px;right:18px;bottom:16px;z-index:2;display:flex;justify-content:space-between;align-items:flex-end;font:400 clamp(24px,3vw,38px)/1 'Bebas Neue',sans-serif;letter-spacing:.06em}
+.sf-cat-label small{font:400 11px 'Space Mono',monospace;letter-spacing:.14em}
+
+/* ---------- new arrivals ---------- */
+.sf-na-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.sf-na-card{display:flex;flex-direction:column;gap:12px;color:inherit;text-decoration:none}
+.sf-na-img{position:relative;aspect-ratio:4/5;overflow:hidden;background:#111}
+.sf-na-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.sf-na-card:hover .sf-na-img img{transform:scale(1.05)}
+.sf-na-tag{position:absolute;top:10px;left:10px;padding:4px 9px;background:#fff;color:#000;font:700 10px 'Space Mono',monospace;letter-spacing:.14em}
+.sf-na-meta{display:flex;justify-content:space-between;gap:12px;font:400 12px/1.5 'Space Mono',monospace;letter-spacing:.04em}
+.sf-na-cta{font:700 11px 'Space Mono',monospace;letter-spacing:.16em;text-decoration:underline}
+
+/* ---------- promo banner ---------- */
+.sf-promo{display:grid;grid-template-columns:1.2fr 1fr;align-items:center;gap:32px;margin:0 clamp(16px,4vw,48px);padding:clamp(32px,5vw,64px);background:#f2f2f2;color:#0a0a0a}
+.sf-promo-kicker{font:700 11px 'Space Mono',monospace;letter-spacing:.2em}
+.sf-promo h3{margin:10px 0 14px;font:400 clamp(40px,7vw,96px)/.92 'Bebas Neue',sans-serif;letter-spacing:.03em}
+.sf-promo p{margin:0 0 22px;max-width:46ch;font:400 13px/1.7 'Space Mono',monospace}
+.sf-promo .sf-btn:hover{background:#0a0a0a;color:#fff}
+.sf-promo-art{display:flex;gap:12px}
+.sf-promo-art img{flex:1;min-width:0;aspect-ratio:3/4;object-fit:cover}
+
+/* ---------- trust badges ---------- */
+.sf-trust{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;border-top:1px solid rgba(128,128,128,.35);border-bottom:1px solid rgba(128,128,128,.35)}
+.sf-trust-item{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.sf-trust-item svg{width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.sf-trust-item strong{font:400 22px 'Bebas Neue',sans-serif;letter-spacing:.08em}
+.sf-trust-item span{font:400 12px/1.6 'Space Mono',monospace;opacity:.75}
+
+/* ---------- reviews ---------- */
+.sf-reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.sf-review{display:flex;flex-direction:column;gap:14px;padding:24px;border:1px solid rgba(128,128,128,.35)}
+.sf-review--placeholder{border-style:dashed}
+.sf-stars{display:flex;gap:3px;color:#f5b301}
+.sf-stars svg{width:16px;height:16px;fill:currentColor}
+.sf-review blockquote{margin:0;font:400 13px/1.8 'Space Mono',monospace}
+.sf-review cite{font:700 11px 'Space Mono',monospace;letter-spacing:.14em;font-style:normal}
+.sf-review-flag{font:400 10px 'Space Mono',monospace;letter-spacing:.12em;opacity:.55}
+
+/* ---------- studio & events ---------- */
+.sf-studio{text-align:center;border-top:1px solid rgba(128,128,128,.35)}
+.sf-studio p{max-width:56ch;margin:0 auto 26px;font:400 13px/1.8 'Space Mono',monospace;opacity:.85}
+.sf-studio-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+
+/* ---------- newsletter ---------- */
+.sf-news-consent{margin:12px 0 0;text-align:center;font:400 11px/1.6 'Space Mono',monospace;opacity:.7}
+.sf-news-consent a{color:inherit}
+.sf-news-error{margin:8px 0 0;text-align:center;font:400 12px 'Space Mono',monospace;color:#ff6b6b}
+.sf-news-error:empty{display:none}
+
+/* ---------- newsletter incentive (unused while there is no welcome offer) ---------- */
+.sf-incentive{margin:0 0 18px;text-align:center;font:400 clamp(22px,3vw,34px)/1.1 'Bebas Neue',sans-serif;letter-spacing:.1em}
+.sf-incentive small{display:block;margin-top:6px;font:400 11px 'Space Mono',monospace;letter-spacing:.12em;opacity:.7}
+
+/* ---------- footer ---------- */
+.footer-grid{display:grid;grid-template-columns:1.6fr repeat(4,1fr);gap:40px}
+.sf-footer-extra{display:flex;flex-direction:column;gap:18px;padding:28px 0 8px;margin-top:28px;border-top:1px solid rgba(128,128,128,.3)}
+.sf-payments{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.sf-pay-label{margin-right:6px;font:400 11px 'Space Mono',monospace;letter-spacing:.16em;opacity:.65}
+.sf-pay{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border:1px solid rgba(128,128,128,.45);border-radius:4px;font:700 11px 'Space Mono',monospace;letter-spacing:.1em}
+.sf-pay-visa{font-style:italic;font-size:13px;letter-spacing:.04em}
+.sf-pay svg{width:24px;height:16px}
+.sf-legal{display:flex;flex-wrap:wrap;gap:8px 24px;font:400 11px 'Space Mono',monospace;letter-spacing:.12em;text-transform:uppercase}
+.sf-legal a,.sf-legal button{color:inherit;opacity:.75;text-decoration:none}
+.sf-legal a:hover,.sf-legal button:hover{opacity:1;text-decoration:underline}
+.sf-legal button{background:none;border:0;padding:0;font:inherit;letter-spacing:inherit;text-transform:inherit;cursor:pointer}
+
+/* ---------- responsive ---------- */
+@media(max-width:1000px){
+  .sf-trust{grid-template-columns:repeat(2,1fr)}
+  .sf-reviews-grid{grid-template-columns:1fr}
+  .sf-promo{grid-template-columns:1fr}
+}
+@media(max-width:900px){
+  .sf-cat-grid,.sf-na-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .footer-brand{grid-column:1/-1}
+}
+@media(max-width:520px){
+  .footer-grid{grid-template-columns:1fr}
+}
+
+/* ---------- layout + image fitting safeguards ---------- */
+.sf-wrap,.sf-promo,.sf-cat-grid,.sf-na-grid,.sf-reviews-grid,.sf-trust,.sf-footer-extra{box-sizing:border-box;max-width:100%}
+.sf-promo,.sf-trust,.sf-studio,.sf-footer-extra{position:static;min-height:0;height:auto;float:none}
+.sf-cat-card,.sf-na-img{background:#111}
+.sf-cat-card img,.sf-na-img img,.sf-promo-art img{display:block;width:100%;height:100%;max-width:100%;object-fit:cover;object-position:center top}
+.sf-promo-art{align-items:stretch}
+.sf-promo-art img{height:auto;aspect-ratio:3/4}
+.sf-wish-row img{display:block;width:64px;height:80px;flex:none;object-fit:cover;object-position:center top}
+.studio-tile img{display:block;width:100%;height:100%;object-fit:cover;object-position:center top}
+.sf-legal{position:static;transform:none;width:auto;background:none;padding:0;border:0}
+@media(max-width:600px){
+  .sf-promo{margin:0 16px}
+  .sf-trust{grid-template-columns:1fr}
+}
+
+    </style>
+</head>
+<body>
+<!-- PAGE LOADER — must be first element in body -->
+<div id="pageLoader" class="page-loader">
+    <span class="loader-brand">DISCRETE</span>
+    <div class="loader-bar-track">
+        <div class="loader-bar-fill"></div>
+    </div>
+    <span class="loader-caption">The art of being seen without being loud.</span>
+</div>
+
+<!-- ANNOUNCEMENT BAR (HIGH-END INFINITE LOOP) -->
+<div class="announcement-bar">
+    <div class="marquee-track">
+        <p>🔔 NEW EVENTS COMING SOON &nbsp;|&nbsp; DELIVERY VIA PEP PAXI &nbsp;|&nbsp; WEBSITE OPEN 24HRS &nbsp;|&nbsp; 🔔 NEW EVENTS COMING SOON &nbsp;|&nbsp; DELIVERY VIA PEP PAXI &nbsp;|&nbsp; WEBSITE OPEN 24HRS &nbsp;|&nbsp;</p>
+        <!-- The second paragraph mirrors the first to create the optical illusion of an uninterrupted seam -->
+        <p aria-hidden="true">🔔 NEW EVENTS COMING SOON &nbsp;|&nbsp; DELIVERY VIA PEP PAXI &nbsp;|&nbsp; WEBSITE OPEN 24HRS &nbsp;|&nbsp; 🔔 NEW EVENTS COMING SOON &nbsp;|&nbsp; DELIVERY VIA PEP PAXI &nbsp;|&nbsp; WEBSITE OPEN 24HRS &nbsp;|&nbsp;</p>
+    </div>
+</div>
+    <!-- PREMIUM NAVIGATION -->
+<nav>
+    <div class="logo">
+        <a href="index.html"><img src="logo.png" alt="DISCRETE"></a>
+    </div>
+
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="new-arrivals.html">NEW ARRIVALS</a></li>
+        <li><a href="t-shirts.html">T-SHIRTS</a></li>
+        <li><a href="accessories.html">ACCESSORIES</a></li>
+    </ul>
+
+    <div class="nav-meta">
+        <a href="#stores" title="Store Locator">
+            <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25a7.5 7.5 0 1 1 15 0Z"/></svg>
+        </a>
+        <a href="#search" title="Search">
+            <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.602 10.602Z"/></svg>
+        </a>
+        <a href="#cart" title="Shopping Cart" class="cart-icon-wrapper">
+            <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.116 60.116 0 0 0-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/></svg>
+            <span id="cart-count" class="cart-badge"></span>
+        </a>
+    </div>
+</nav>
+
+    <!-- HERO / LANDING REVELATION -->
+<section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-bg"></div>
+        <div class="hero-bg"></div>
+        <h1>DISCRETE</h1>
+        <p>The art of being seen without being loud.</p>
+        <button class="btn" onclick="document.getElementById('t-shirts').scrollIntoView({behavior: 'smooth'});">Enter The Studio</button>
+    </section>
+
+    <!-- BRAND MANIFESTO SECTION -->
+    <section class="manifesto" id="manifesto">
+        <h2>"True presence isn't about demanding attention. It's about commanding the room through effortless, silent confidence."</h2>
+        <span>Designed for the youth. Built in absolute silence.</span>
+    </section>
+
+    <!-- ========== SHOP BY CATEGORY ========== -->
+    <section class="products-section" id="categories">
+        <div class="section-header">
+            <h3>SHOP BY CATEGORY</h3>
+        </div>
+        <div class="sf-cat-grid">
+            <a class="sf-cat-card" href="new-arrivals.html">
+                <img src="images/hero1.webp" alt="New arrivals" loading="lazy">
+                <span class="sf-cat-label">NEW ARRIVALS <small>→</small></span>
+            </a>
+            <a class="sf-cat-card" href="t-shirts.html">
+                <img src="images/d01-black-front.webp" alt="T-shirts" loading="lazy">
+                <span class="sf-cat-label">T-SHIRTS <small>→</small></span>
+            </a>
+            <a class="sf-cat-card" href="accessories.html">
+                <img src="images/discrete-knitted-beanie.webp" alt="Accessories" loading="lazy">
+                <span class="sf-cat-label">ACCESSORIES <small>→</small></span>
+            </a>
+        </div>
+    </section>
+
+    <!-- ========== NEW ARRIVALS SHOWCASE ==========
+         Mirrors new-arrivals.html. Each card opens that page and highlights the product.
+         Keep these four in step with the products on new-arrivals.html. -->
+    <section class="products-section" id="new-arrivals">
+        <div class="section-header">
+            <h3>NEW ARRIVALS</h3>
+            <a href="new-arrivals.html" class="view-all-link">VIEW ALL →</a>
+        </div>
+        <div class="sf-na-grid">
+            <a class="sf-na-card" href="new-arrivals.html?find=D19">
+                <div class="sf-na-img"><img src="images/d19-front.webp" alt="D19 — Off The Record Tee" loading="lazy"><span class="sf-na-tag">NEW</span></div>
+                <div class="sf-na-meta"><span>D19 — Off The Record Tee</span><span>R450</span></div>
+                <span class="sf-na-cta">VIEW &amp; ADD →</span>
+            </a>
+            <a class="sf-na-card" href="new-arrivals.html?find=D18">
+                <div class="sf-na-img"><img src="images/d18-front.webp" alt="D18 — Keys to Origin Tee" loading="lazy"><span class="sf-na-tag">NEW</span></div>
+                <div class="sf-na-meta"><span>D18 — Keys to Origin Tee</span><span>R450</span></div>
+                <span class="sf-na-cta">VIEW &amp; ADD →</span>
+            </a>
+            <a class="sf-na-card" href="new-arrivals.html?find=D14">
+                <div class="sf-na-img"><img src="images/d14-blue-front.webp" alt="D14 — The Brand Carrier Tee" loading="lazy"><span class="sf-na-tag">NEW</span></div>
+                <div class="sf-na-meta"><span>D14 — The Brand Carrier Tee</span><span>R450</span></div>
+                <span class="sf-na-cta">VIEW &amp; ADD →</span>
+            </a>
+            <a class="sf-na-card" href="new-arrivals.html?find=D15">
+                <div class="sf-na-img"><img src="images/d15-front.webp" alt="D15 — The Founder’s Mark Tee" loading="lazy"><span class="sf-na-tag">NEW</span></div>
+                <div class="sf-na-meta"><span>D15 — The Founder’s Mark Tee</span><span>R450</span></div>
+                <span class="sf-na-cta">VIEW &amp; ADD →</span>
+            </a>
+        </div>
+    </section>
+
+
+       <!-- ========== T-SHIRTS SECTION ========== -->
+    <section class="products-section" id="t-shirts">
+    <div class="section-header">
+        <h3>T-SHIRTS — R450</h3>
+        <a href="t-shirts.html" class="view-all-link">VIEW ALL →</a>
+    </div>
+
+    <div class="product-grid">
+    <!-- D19 -->
+    <div class="product-card" id="product-d19">
+        <div class="product-image product-image--gallery">
+            <img src="images/d19-front.webp" alt="Off The Record Tee Front" class="is-active" loading="lazy">
+        </div>
+        <div class="product-info">
+            <h3 class="product-title">D19 — Off The Record Tee</h3>
+            <span class="product-price">R450</span>
+        </div>
+        <div class="product-actions">
+            <select id="size-d19" class="size-select" aria-label="Choose size">
+            <option value="" disabled selected>SIZE</option>
+            <option value="XS">XS</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+            <option value="XXL">XXL</option>
+            </select>
+            <div class="quantity-selector">
+                <button type="button" class="qty-btn qty-minus">−</button>
+                <span class="qty-value">1</span>
+                <button type="button" class="qty-btn qty-plus">+</button>
+            </div>
+            <button type="button" class="add-to-cart">Add to Cart</button>
+        </div>
+    </div>
+
+    <!-- D18 -->
+    <div class="product-card" id="product-d18">
+        <div class="product-image product-image--gallery">
+            <img src="images/d18-front.webp" alt="Keys to Origin Tee Front" class="is-active" loading="lazy">
+            <img src="images/d18-back.webp" alt="Keys to Origin Tee Back" loading="lazy">
+        </div>
+        <div class="product-info">
+            <h3 class="product-title">D18 — Keys to Origin Tee</h3>
+            <span class="product-price">R450</span>
+        </div>
+        <div class="product-actions">
+            <select id="size-d18" class="size-select" aria-label="Choose size">
+            <option value="" disabled selected>SIZE</option>
+            <option value="XS">XS</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+            <option value="XXL">XXL</option>
+            </select>
+            <div class="quantity-selector">
+                <button type="button" class="qty-btn qty-minus">−</button>
+                <span class="qty-value">1</span>
+                <button type="button" class="qty-btn qty-plus">+</button>
+            </div>
+            <button type="button" class="add-to-cart">Add to Cart</button>
+        </div>
+    </div>
+
+    <!-- D14 -->
+    <div class="product-card" id="product-d14">
+        <div class="product-image product-image--gallery">
+            <img src="images/d14-blue-front.webp" alt="The Brand Carrier Tee Blue" class="is-active" data-color="blue" loading="lazy">
+            <img src="images/d14-red-front.webp" alt="The Brand Carrier Tee Red" data-color="red" loading="lazy">
+        </div>
+        <div class="colour-swatches">
+            <button type="button" class="swatch active" data-color="blue" style="background:#1f3fa8;" title="Blue" aria-label="Blue"></button>
+            <button type="button" class="swatch" data-color="red" style="background:#b3141c;" title="Red" aria-label="Red"></button>
+        </div>
+
+        <div class="product-info">
+            <h3 class="product-title">D14 — The Brand Carrier Tee</h3>
+            <span class="product-price">R450</span>
+        </div>
+        <div class="product-actions">
+            <select id="size-d14" class="size-select" aria-label="Choose size">
+            <option value="" disabled selected>SIZE</option>
+            <option value="XS">XS</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+            <option value="XXL">XXL</option>
+            </select>
+            <div class="quantity-selector">
+                <button type="button" class="qty-btn qty-minus">−</button>
+                <span class="qty-value">1</span>
+                <button type="button" class="qty-btn qty-plus">+</button>
+            </div>
+            <button type="button" class="add-to-cart">Add to Cart</button>
+        </div>
+    </div>
+
+    <!-- D15 -->
+    <div class="product-card" id="product-d15">
+        <div class="product-image product-image--gallery">
+            <img src="images/d15-front.webp" alt="The Founder’s Mark Tee Front" class="is-active" loading="lazy">
+            <img src="images/d15-back.webp" alt="The Founder’s Mark Tee Back" loading="lazy">
+        </div>
+        
+        <div class="product-info">
+            <h3 class="product-title">D15 — The Founder’s Mark Tee</h3>
+            <span class="product-price">R450</span>
+        <span style="display:inline-block;margin-top:6px;padding:3px 8px;border:1px solid currentColor;font-size:10px;letter-spacing:.12em;text-transform:uppercase;">Limited — only 3</span>
+        </div>
+        <div class="product-actions">
+            <select id="size-d15" class="size-select" aria-label="Choose size">
+            <option value="" disabled selected>SIZE</option>
+            <option value="XS">XS</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+            <option value="XXL">XXL</option>
+            </select>
+            <div class="quantity-selector">
+                <button type="button" class="qty-btn qty-minus">−</button>
+                <span class="qty-value">1</span>
+                <button type="button" class="qty-btn qty-plus">+</button>
+            </div>
+            <button type="button" class="add-to-cart">Add to Cart</button>
+        </div>
+    </div>
+
+    <!-- D16 -->
+    <div class="product-card" id="product-d16">
+        <div class="product-image product-image--gallery">
+            <img src="images/d16-front.webp" alt="The Unseen Archive Tee White Front" class="is-active" data-color="white" loading="lazy">
+            <img src="images/d16-black-front.webp" alt="The Unseen Archive Tee Black Front" data-color="black" loading="lazy">
+        </div>
+        
+        <div class="colour-swatches">
+            <button type="button" class="swatch active" data-color="white" style="background:#f5f5f5; outline: 1px solid #ccc;" title="White" aria-label="White"></button>
+            <button type="button" class="swatch" data-color="black" style="background:#111;" title="Black" aria-label="Black"></button>
+        </div>
+        <div class="product-info">
+            <h3 class="product-title">D16 — The Unseen Archive Tee</h3>
+            <span class="product-price">R450</span>
+        </div>
+        <div class="product-actions">
+            <select id="size-d16" class="size-select" aria-label="Choose size">
+            <option value="" disabled selected>SIZE</option>
+            <option value="XS">XS</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+            <option value="XXL">XXL</option>
+            </select>
+            <div class="quantity-selector">
+                <button type="button" class="qty-btn qty-minus">−</button>
+                <span class="qty-value">1</span>
+                <button type="button" class="qty-btn qty-plus">+</button>
+            </div>
+            <button type="button" class="add-to-cart">Add to Cart</button>
+        </div>
+    </div>
+
+    <!-- D01 -->
+<div class="product-card">
+
+    <!-- IMAGE GALLERY -->
+    <div class="product-image product-image--gallery">
+
+        <!-- BLACK -->
+     <img src="images/d01-black-front.webp" alt="D01 Black Front" class="is-active" data-color="black" fetchpriority="high">
+        <img src="images/d01-black-back.webp" alt="D01 Black Back"  data-color="black" loading="lazy">
+
+        <!-- WHITE -->
+       <img src="images/d01-white-front.webp" alt="D01 White Front" data-color="white" loading="lazy">
+        <img src="images/d01-white-back.webp" alt="D01 White Back"  data-color="white" loading="lazy">
+
+    </div>
+
+    <!-- SWATCHES -->
+    <div class="colour-swatches">
+        <button type="button" class="swatch active" data-color="black"
+            style="background:#111;"
+            title="Black" aria-label="Black"></button>
+
+        <button type="button" class="swatch" data-color="white"
+            style="background:#f5f5f5; border: 1px solid #aaa;"
+            title="White" aria-label="White"></button>
+    </div>
+
+    <!-- INFO -->
+    <div class="product-info">
+        <h3 class="product-title">D01 — Discrete Earth Guardian Tee</h3>
+        <span class="product-price">R450</span>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="product-actions">
+        <label for="size-d01" class="sr-only">Choose size</label>
+
+        <select id="size-d01" class="size-select">
+            <option value="" disabled selected>SIZE</option>
+            <option value="XS">XS</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+            <option value="XXL">XXL</option>
+        </select>
+
+          <!-- ADD THIS -->
+    <div class="quantity-selector">
+        <button type="button" class="qty-btn qty-minus">−</button>
+        <span class="qty-value">1</span>
+        <button type="button" class="qty-btn qty-plus">+</button>
+    </div>
+
+        <button type="button" class="add-to-cart">
+            Add to Cart
+        </button>
+    </div>
+
+</div>
+
+    <!-- D02 -->
+<div class="product-card">
+
+    <!-- IMAGE GALLERY -->
+    <div class="product-image product-image--gallery">
+        <!-- White Variant (Default Active) -->
+        <img src="images/d02-front.webp" alt="D02 Archive Tee White" class="is-active" loading="lazy">
+        <!-- Black Variant -->
+        <img src="images/d02-back.webp" alt="D02 Archive Tee Black" loading="lazy">
+    </div>
+
+    <!-- INFO -->
+    <div class="product-info">
+        <h3 class="product-title">D02 — Discrete Archive Tee (Works Graphic)</h3>
+        <span class="product-price">R450</span>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="product-actions">
+        <!-- Color Swatches (White and Black) -->
+        <div class="colour-swatches" style="margin-bottom: 10px;">
+            <button class="swatch active" data-color="white" style="background:#f5f5f5; outline: 1px solid #ccc;" title="White"></button>
+            <button class="swatch" data-color="black" style="background:#111;" title="Black"></button>
+        </div>
+
+        <label for="size-d02" class="sr-only">Choose size</label>
+        <select id="size-d02" class="size-select">
+            <option value="" disabled selected>SIZE</option>
+            <option value="XS">XS</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+            <option value="XXL">XXL</option>
+        </select>
+
+        <div class="quantity-selector">
+            <button type="button" class="qty-btn qty-minus">−</button>
+            <span class="qty-value">1</span>
+            <button type="button" class="qty-btn qty-plus">+</button>
+        </div>
+        <button type="button" class="add-to-cart">Add to Cart</button>
+    </div>
+
+</div>
+
+
+<!-- D13 -->
+<div class="product-card" id="product-d13">
+
+    <div class="product-image product-image--gallery">
+        <img src="images/discrete-halo-tee-front.webp" alt="Discrete Halo Tee Front" class="is-active">
+        <img src="images/discrete-halo-tee-back.webp" alt="Discrete Halo Tee Back" loading="lazy">
+    </div>
+
+    <div class="product-info">
+        <h3 class="product-title">D13 — Discrete Halo Tee</h3>
+        <span class="product-price">R450</span>
+    </div>
+
+    <div class="product-actions">
+        <!-- Size Selector Dropdown -->
+        <div class="variant-selector" style="margin-bottom: 10px; width: 100%;">
+            <label for="halo-tee-size" style="font-size: 12px; font-weight: bold; display: block; margin-bottom: 5px;">SIZE:</label>
+            <select id="halo-tee-size" class="size-select" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; background: #fff; cursor: pointer;">
+                <option value="" disabled selected>Select Size</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+            </select>
+        </div>
+
+        <div class="quantity-selector">
+            <button type="button" class="qty-btn qty-minus">−</button>
+            <span class="qty-value">1</span>
+            <button type="button" class="qty-btn qty-plus">+</button>
+        </div>
+
+        <button type="button" class="add-to-cart">Add to Cart</button>
+    </div>
+
+</div>
+
+
+      <!-- D05 -->
+<div class="product-card">
+
+    <!-- IMAGE GALLERY -->
+    <div class="product-image product-image--gallery">
+
+        <!-- FRONT -->
+        <img src="images/d05-front.webp"
+             alt="D05 Front"
+             class="is-active"
+             loading="lazy">
+
+        <!-- BACK -->
+        <img src="images/d05-back.webp"
+             alt="D05 Back"
+             loading="lazy">
+
+    </div>
+
+    <!-- INFO -->
+<div class="product-info">
+    <h3 class="product-title">D05 — Discrete Petal Code Tee</h3>
+    <span class="product-price">R450</span>
+</div>
+
+<!-- ACTIONS -->
+<div class="product-actions">
+    <label for="size-d05" class="sr-only">Choose size</label>
+    <select id="size-d05" class="size-select">
+        <option value="" disabled selected>SIZE</option>
+        <option value="XS">XS</option>
+        <option value="S">S</option>
+        <option value="M">M</option>
+        <option value="L">L</option>
+        <option value="XL">XL</option>
+        <option value="XXL">XXL</option>
+    </select>
+      <!-- ADD THIS -->
+    <div class="quantity-selector">
+        <button type="button" class="qty-btn qty-minus">−</button>
+        <span class="qty-value">1</span>
+        <button type="button" class="qty-btn qty-plus">+</button>
+    </div>
+    <button type="button" class="add-to-cart">Add to Cart</button>
+</div>
+
+</div>
+</div> <!-- closes T-shirts .product-grid (was previously left open) -->
+</section>
+    <!-- ========== PROMOTIONAL BANNER ==========
+     Add a real discount / end date here when you run one (e.g. "SAVE R50 ON BUNDLES — ENDS SUNDAY"). -->
+<section class="sf-promo" id="promo-banner" aria-label="Bundle offer">
+    <div>
+        <span class="sf-promo-kicker">THE BUNDLE</span>
+        <h3>COMPLETE THE FIT</h3>
+        <p>Pair any tee with a cap or beanie. Built to be worn together, quietly.</p>
+        <a class="sf-btn" href="accessories.html">SHOP ACCESSORIES →</a>
+    </div>
+    <div class="sf-promo-art" aria-hidden="true">
+        <img src="images/discrete-knitted-beanie.webp" alt="" loading="lazy">
+        <img src="images/dsc-beanie-black.webp" alt="" loading="lazy">
+    </div>
+</section>
+
+<!-- ========== ACCESSORIES SECTION ========== -->
+<section class="products-section" id="accessories">
+    <div class="section-header">
+        <h3>ACCESSORIES</h3>
+        <a href="accessories.html" class="view-all-link">VIEW ALL →</a>
+    </div>
+
+    <div class="product-grid">
+<!-- D10 -->
+<div class="product-card" id="product-d10">
+    <div class="product-image product-image--gallery">
+        <img src="images/discrete-knitted-beanie.webp" alt="Discrete Knitted Beanie Front" class="is-active">
+        <img src="images/discrete-knitted-beanie-back.webp" alt="Discrete Knitted Beanie Back" loading="lazy">
+    </div>
+
+    <div class="product-info">
+        <h3 class="product-title">D10 — Discrete Knitted Beanies</h3>
+        <span class="product-price">R250</span>
+    </div>
+
+    <div class="product-actions">
+    <div class="colour-swatches">
+        <button type="button" class="swatch active" data-color="black" style="background:#111;" title="Black" aria-label="Black"></button>
+        <button type="button" class="swatch" data-color="white" style="background:#f5f5f5; outline: 1px solid #ccc;" title="White" aria-label="White"></button>
+        <button type="button" class="swatch" data-color="purple" style="background:#6B3FA0;" title="Purple" aria-label="Purple"></button>
+        <button type="button" class="swatch" data-color="pink" style="background:#E75480;" title="Pink" aria-label="Pink"></button>
+    </div>
+
+    <div class="quantity-selector">
+        <button type="button" class="qty-btn qty-minus">−</button>
+        <span class="qty-value">1</span>
+        <button type="button" class="qty-btn qty-plus">+</button>
+    </div>
+
+    <button type="button" class="add-to-cart">Add to Cart</button>
+</div>
+</div>
+<!-- D11 -->
+<div class="product-card" id="product-d11">
+
+    <div class="product-image product-image--gallery">
+        <img src="images/dsc-beanie-black.webp" alt="DSC Beanie Black Front" class="is-active">
+        <img src="images/dsc-beanie-black-back.webp" alt="DSC Beanie Black Back" loading="lazy">
+    </div>
+
+    <div class="product-info">
+        <h3 class="product-title">D11 — DSC Beanies</h3>
+        <span class="product-price">R150</span>
+    </div>
+
+    <div class="product-actions">
+        <!-- Color Swatches (Only Black Available) -->
+        <div class="colour-swatches">
+            <button type="button" class="swatch active" data-color="black" style="background:#111;" title="Black" aria-label="Black"></button>
+        </div>
+
+        <input type="hidden" class="size-select" value="One Size">
+        <div class="quantity-selector">
+            <button type="button" class="qty-btn qty-minus">−</button>
+            <span class="qty-value">1</span>
+            <button type="button" class="qty-btn qty-plus">+</button>
+        </div>
+
+        <button type="button" class="add-to-cart">Add to Cart</button>
+    </div>
+
+</div>
+
+
+
+
+</div> <!-- closes .product-grid -->
+</section>
+<!-- THAT'S IT — no extra stray closing tag here -->
+
+<!-- ========== TRUST BADGES ========== -->
+<section class="sf-wrap sf-trust" aria-label="Why shop with DISCRETE">
+    <div class="sf-trust-item">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 6h13v10H1z"/><path d="M14 9h4l3 3v4h-7z"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+        <strong>PEP PAXI DELIVERY</strong>
+        <span>Collect from your nearest PEP store or PAXI Point.</span>
+    </div>
+    <div class="sf-trust-item">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        <strong>SECURE CHECKOUT</strong>
+        <span>Your payment details stay protected.</span>
+    </div>
+    <div class="sf-trust-item">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/></svg>
+        <strong>EASY RETURNS</strong>
+        <span>Returns &amp; exchanges, explained in our policy.</span>
+    </div>
+    <div class="sf-trust-item">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>
+        <strong>WHATSAPP SUPPORT</strong>
+        <span>Questions? Message the studio directly.</span>
+    </div>
+</section>
+
+<!-- ========== CUSTOMER REVIEWS ==========
+     Hidden until you add real reviews (see the REVIEWS list in the script at the bottom of this page). -->
+<section class="sf-wrap" id="reviews" aria-label="Customer reviews" hidden>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="sf-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol></svg>
+    <div class="section-header">
+        <h3>WHAT THE FAM SAYS</h3>
+    </div>
+    <div class="sf-reviews-grid" id="sfReviewsGrid"></div>
+</section>
+
+
+ <!-- ========== STUDIO PERSPECTIVES ========== -->
+<section class="social-proof-section">
+
+    <div class="studio-intro">
+        <span class="studio-label">STUDIO PERSPECTIVES</span>
+        <h2 class="studio-heading">SEEN IN THE STREETS</h2>
+        <a href="https://www.instagram.com/discrete_clothin?igsh=MXcyNnM3amw1ZTVlOA==" 
+           target="_blank" rel="noopener noreferrer" class="studio-ig-handle">
+            @DISCRETE_CLOTHIN ↗
+        </a>
+    </div>
+
+    <div class="studio-grid">
+
+        <!-- Large left image -->
+        <a href="https://www.instagram.com/p/DGWNf2GuRXn/?igsh=emFtYWQ3cWw4MzZu" 
+           target="_blank" rel="noopener noreferrer" class="studio-tile studio-tile--large">
+           <img src="images/hero1.webp" alt="DISCRETE Campaign Look 01" loading="lazy"> 
+            <div class="studio-tile-overlay">
+                <span class="studio-tile-cta">VIEW LOOK →</span>
+            </div>
+        </a>
+
+        <!-- Right column — two stacked -->
+        <div class="studio-col">
+
+            <a href="https://www.instagram.com/discrete_clothin?igsh=MXcyNnM3amw1ZTVlOA==" 
+               target="_blank" rel="noopener noreferrer" class="studio-tile">
+                <img src="images/hero2.webp" alt="DISCRETE Campaign Look 02" loading="lazy">
+                <div class="studio-tile-overlay">
+                    <span class="studio-tile-cta">VIEW LOOK →</span>
+                </div>
+            </a>
+
+            <a href="https://www.instagram.com/discrete_clothin?igsh=MXcyNnM3amw1ZTVlOA==" 
+               target="_blank" rel="noopener noreferrer" class="studio-tile">
+              <img src="images/hero3.webp" alt="DISCRETE Campaign Look 03" loading="lazy">
+                <div class="studio-tile-overlay">
+                    <span class="studio-tile-cta">VIEW LOOK →</span>
+                </div>
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ========== STUDIO & EVENTS (target for the #stores store-locator link) ========== -->
+<section class="sf-wrap sf-studio" id="stores">
+    <div class="section-header" style="justify-content:center;">
+        <h3>STUDIO &amp; EVENTS</h3>
+    </div>
+    <p>Pop-ups, drops and events are announced first on Instagram and through the newsletter. Follow along, or message the studio to ask where we'll be next.</p>
+    <div class="sf-studio-actions">
+        <a class="sf-btn" href="https://www.instagram.com/discrete_clothin?igsh=MXcyNnM3amw1ZTVlOA==" target="_blank" rel="noopener noreferrer">FOLLOW ON INSTAGRAM ↗</a>
+        <a class="sf-btn" href="https://wa.me/27699478580?text=Hi%20DISCRETE%20Studio%2C%20where%20can%20I%20find%20you%3F" target="_blank" rel="noopener noreferrer">MESSAGE ON WHATSAPP ↗</a>
+    </div>
+</section>
+
+    <!-- ========== NEWSLETTER / PROMO SECTION ========== -->
+ <div class="promo-section">
+    <div class="promo-links">
+        <a href="#stores">EVENTS</a>
+    </div>
+
+    <div class="promo-brand-text">
+        DISCRETE
+    </div>
+
+
+    <div class="promo-form">
+        <form id="newsletter-form" style="width: 100%;">
+            <div class="signup-input-group">
+                <input type="email" id="newsletter-email" placeholder="E-MAIL" class="promo-input" required>
+                <button type="submit" class="promo-btn">JOIN THE DISCRETE FAM</button>
+            </div>
+            <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;">
+            <p class="sf-news-consent">By joining you agree to receive DISCRETE news by email. Unsubscribe any time by emailing <a href="mailto:discreteclothing24@gmail.com">discreteclothing24@gmail.com</a>. See our <a href="privacy.html">Privacy Policy</a>.</p>
+            <p id="newsletter-error" class="sf-news-error" role="alert"></p>
+        </form>
+        
+        <!-- Success message sits quietly inside the same container until triggered -->
+        <div id="newsletter-success-msg" class="success-message-block" style="display: none; text-align: center; width: 100%;">
+            <span>THANKS FOR SIGNING UP. WELCOME TO THE STUDIO.</span>
+        </div>
+    </div>
+
+    <div class="promo-help">
+        <span>HI. NEED ANY HELP? </span>
+        <a href="mailto:discreteclothing24@gmail.com" style="color: inherit; font-weight: 700; text-decoration: underline; margin-left: 5px;">EMAIL THE STUDIO</a>
+    </div>
+</div>
+    <!-- HIGH-END FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h4>DISCRETE</h4>
+                <p>The art of being seen without being loud. Premium streetwear tailored for the modern youth.</p>
+            </div>
+            <div class="footer-links">
+                <h5>Collections</h5>
+                <ul>
+                    <li><a href="new-arrivals.html">New Arrivals</a></li>
+                    <li><a href="t-shirts.html">T-Shirts</a></li>
+                </ul>
+            </div>
+<div class="footer-links">
+    <h5>Assistance</h5>
+    <ul>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="track-order.html">Track Order</a></li>
+        <li><a href="shipping.html">Shipping Details</a></li>
+        <li><a href="refund-policy.html">Returns &amp; Exchanges</a></li>
+        <li><a href="sizing-guide.html">Sizing Guide</a></li>
+        <li><a href="mailto:discreteclothing24@gmail.com">Contact Us</a></li>
+    </ul>
+</div>
+<div class="footer-links">
+    <h5>Company</h5>
+    <ul>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="#stores">Studio &amp; Events</a></li>
+    </ul>
+</div>
+<div class="footer-links">
+    <h5>Community</h5>
+    <ul>
+        <li><a href="https://www.instagram.com/discrete_clothin?igsh=MXcyNnM3amw1ZTVlOA==" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+    </ul>
+</div>
+
+        </div> <!-- closes .footer-grid (was previously left open) -->
+
+        <div class="sf-footer-extra">
+            <div class="sf-payments" aria-label="Accepted payment methods">
+                <span class="sf-pay-label">WE ACCEPT</span>
+                <span class="sf-pay sf-pay-visa">VISA</span>
+                <span class="sf-pay"><svg viewBox="0 0 24 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="#eb001b"/><circle cx="16" cy="8" r="7" fill="#f79e1b" fill-opacity=".9"/></svg>MASTERCARD</span>
+                <span class="sf-pay">PAYSTACK</span>
+            </div>
+            <div class="sf-legal" role="navigation" aria-label="Legal">
+                <a href="terms.html">Terms &amp; Conditions</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="refund-policy.html">Refund &amp; Cancellation Policy</a>
+                <a href="#cookies" data-cookie-settings>Cookie Settings</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+    <div>© 2026 DISCRETE STUDIO. All Rights Reserved.</div>
+    <div>Designed for the Loud Minority, Built by the Silent Majority.</div>
+    <div style="font-size:11px;color:#555;margin-top:6px;">Website designed by Boipelo Mothibi</div>
+    <a href="admin.html" style="color:transparent;font-size:10px;user-select:none;" tabindex="-1">.</a>
+</div>
+    </footer>
+<!-- CART MODAL OVERLAY -->
+<div class="cart-overlay" id="cartOverlay">
+    <div class="cart-modal">
+        <div class="cart-modal-header">
+            <h4>YOUR CART</h4>
+            <button class="cart-close-btn" id="closeCartBtn">&times;</button>
+        </div>
+
+        <div class="cart-items-container" id="cartItemsContainer">
+            <!-- Items will be dynamically inserted here -->
+            <p class="empty-cart-message">Your cart is empty.</p>
+        </div>
+
+        <div class="cart-footer" id="cartFooter" style="display: none;">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">R0</span>
+            </div>
+            <button class="checkout-btn" onclick="window.location.href='checkout.html'">CHECKOUT</button>
+        </div>
+    </div>
+</div>
+<a href="https://wa.me/27699478580?text=Hi%20DISCRETE%20Studio%2C%20I'm%20inquiring%20about%20an%20item..." 
+   class="whatsapp-float" 
+   target="_blank" 
+   rel="noopener noreferrer" 
+   aria-label="Chat with DISCRETE on WhatsApp">
+    <svg viewBox="0 0 24 24" class="whatsapp-icon">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.455 5.703 1.456h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+</a>
+<button type="button" id="backToTop" class="back-to-top" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" class="arrow-icon">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+    </svg>
+</button>
+<!-- SEARCH OVERLAY -->
+<div class="search-overlay" id="searchOverlay" aria-hidden="true">
+    <button class="search-close-btn" id="searchCloseBtn" aria-label="Close search">&times;</button>
+    <div class="search-container">
+        <div class="search-input-wrapper">
+            <svg class="search-icon-field" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.602 10.602Z"/>
+            </svg>
+            <input type="text" id="searchInput" placeholder="SEARCH THE STUDIO..." autocomplete="off" spellcheck="false">
+            <button class="search-clear-btn" id="searchClearBtn" aria-label="Clear">✕</button>
+        </div>
+        <div id="searchResults" class="search-results"></div>
+        <p class="search-hint">PRESS <kbd>ESC</kbd> TO CLOSE</p>
+    </div>
+</div>
+
+
+ <script src="js/products.js" defer></script>
+ <script src="js/scripts.js" defer></script>
+ <script src="js/storefront.js" defer></script>
+<script id="reviews-script">
+/* ADD REAL CUSTOMER REVIEWS HERE, with the customer's permission. One line per review:
+   { name: 'Thando M.', stars: 5, text: 'Fits perfectly and the print is clean.' },
+   While this list is empty the whole "What the fam says" section stays hidden. */
+const REVIEWS = [
+];
+(function () {
+    var section = document.getElementById('reviews'), grid = document.getElementById('sfReviewsGrid');
+    if (!section || !grid || !Array.isArray(REVIEWS) || !REVIEWS.length) return;
+    var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+    grid.innerHTML = REVIEWS.map(function (r) {
+        var n = Math.max(1, Math.min(5, Math.round(Number(r.stars) || 5)));
+        return '<article class="sf-review"><div class="sf-stars" role="img" aria-label="' + n + ' out of 5 stars">' +
+            new Array(n + 1).join('<svg><use href="#sf-star"/></svg>') + '</div>' +
+            '<blockquote>' + esc(r.text) + '</blockquote><cite>\u2014 ' + esc(r.name) + '</cite></article>';
+    }).join('');
+    section.hidden = false;
+})();
+</script>
+</body>
+</html>

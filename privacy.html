@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | DISCRETE</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { padding-top: 115px; background: #f7f6f4; }
+        .terms-page {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 48px 20px 80px;
+        }
+        .terms-page h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 34px;
+            letter-spacing: .06em;
+            margin-bottom: 8px;
+        }
+        .terms-updated {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 36px;
+        }
+        .terms-page h2 {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            margin: 36px 0 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0ddd8;
+        }
+        .terms-page p, .terms-page li {
+            font-size: 14px;
+            line-height: 1.75;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .terms-page ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .terms-note {
+            background: #fff;
+            border: 1px solid #e0ddd8;
+            padding: 18px 20px;
+            font-size: 13px;
+            color: #555;
+            margin-top: 40px;
+        }
+        .terms-back {
+            display: inline-block;
+            margin-top: 32px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            color: #0a0a0a;
+            text-decoration: underline;
+        }
+
+        .terms-page a { color: #0a0a0a; }
+        .terms-callout {
+            background: #fff;
+            border-left: 3px solid #0a0a0a;
+            padding: 16px 20px;
+            margin: 0 0 28px;
+        }
+        .terms-callout p, .terms-callout li { margin-bottom: 6px; }
+        .terms-callout ul { margin-bottom: 0; }
+        .terms-todo {
+            background: #fff3cd;
+            border: 1px dashed #b58900;
+            padding: 10px 14px;
+            font-size: 13px;
+            margin-bottom: 14px;
+        }
+        .terms-table-wrap { overflow-x: auto; margin: 6px 0 18px; }
+        .terms-table { width: 100%; border-collapse: collapse; background: #fff; font-size: 13px; }
+        .terms-table th, .terms-table td {
+            border: 1px solid #e0ddd8;
+            padding: 10px 12px;
+            text-align: left;
+            line-height: 1.5;
+            white-space: nowrap;
+        }
+        .terms-table th { background: #0a0a0a; color: #fff; font-weight: 600; letter-spacing: .04em; }
+        .terms-page h3 { font-size: 14px; margin: 20px 0 8px; }
+
+        /* footer layout (matches homepage) */
+        .footer-grid { display: grid; grid-template-columns: 1.6fr repeat(4, 1fr); gap: 40px; }
+        .footer-legal {
+            display: flex; flex-wrap: wrap; gap: 8px 24px;
+            padding: 24px 0 8px; margin-top: 28px;
+            border-top: 1px solid rgba(128,128,128,.3);
+            font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+        }
+        .footer-legal a { color: inherit; opacity: .75; text-decoration: none; }
+        .footer-legal a:hover { opacity: 1; text-decoration: underline; }
+        @media (max-width: 900px) {
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .footer-brand { grid-column: 1 / -1; }
+        }
+        @media (max-width: 520px) { .footer-grid { grid-template-columns: 1fr; } }
+    </style>
+    <link rel="stylesheet" href="css/storefront.css">
+</head>
+<body>
+
+<div class="announcement-bar">
+    <div class="marquee-track">
+        <p>🔔 NEW EVENTS COMING SOON &nbsp;|&nbsp; WEBSITE OPEN 24HRS &nbsp;|&nbsp; 🔔 NEW EVENTS COMING SOON &nbsp;|&nbsp; WEBSITE OPEN 24HRS &nbsp;|&nbsp;</p>
+        <p aria-hidden="true">🔔 NEW EVENTS COMING SOON &nbsp;|&nbsp; WEBSITE OPEN 24HRS &nbsp;|&nbsp; 🔔 NEW EVENTS COMING SOON &nbsp;|&nbsp; WEBSITE OPEN 24HRS &nbsp;|&nbsp;</p>
+    </div>
+</div>
+
+<nav>
+    <div class="logo">
+        <a href="index.html"><img src="logo.png" alt="DISCRETE"></a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="new-arrivals.html">NEW ARRIVALS</a></li>
+        <li><a href="t-shirts.html">T-SHIRTS</a></li>
+        <li><a href="accessories.html">ACCESSORIES</a></li>
+    </ul>
+    <div class="nav-meta">
+        <a href="index.html#cart" title="Shopping Cart" class="cart-icon-wrapper">
+            <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.116 60.116 0 0 0-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/></svg>
+            <span id="cart-count" class="cart-badge"></span>
+        </a>
+    </div>
+</nav>
+
+<div class="terms-page">
+    <h1>Privacy Policy</h1>
+    <div class="terms-updated">Last updated: November 2026</div>
+
+    <p>DISCRETE respects your privacy. This policy explains what personal information we collect, why, who
+    we share it with, and the rights you have under South Africa's Protection of Personal Information Act
+    (POPIA).</p>
+
+    <div class="terms-callout">
+        <ul>
+            <li>We collect only what we need to take your order and get it to you.</li>
+            <li>We never sell your information.</li>
+            <li>We only email you marketing if you signed up, and you can unsubscribe at any time.</li>
+            <li>You can ask to see, correct, or delete your information at any time.</li>
+        </ul>
+    </div>
+
+    <h2>1. Who Is Responsible</h2>
+    <p>The responsible party for your information is DISCRETE (trading as DISCRETE STUDIO). Our Information
+    Officer is the owner of DISCRETE, reachable at
+    <a href="mailto:discreteclothing24@gmail.com">discreteclothing24@gmail.com</a> or on
+    <a href="https://wa.me/27699478580">WhatsApp</a>.</p>
+    <p><strong>Trading name:</strong> DISCRETE STUDIO<br><strong>Physical address:</strong> 3 Topi Street, Dawn Park Ext 46, South Africa</p>
+
+    <h2>2. What We Collect</h2>
+    <ul>
+        <li><strong>Contact details:</strong> your name, email address, and cell phone / WhatsApp number.</li>
+        <li><strong>Delivery details:</strong> the PEP store or PAXI Point you choose for collection, and any
+        address details needed to deliver your order.</li>
+        <li><strong>Order details:</strong> what you ordered (items, sizes, quantities), amounts, and the
+        payment status and reference we receive from Paystack. We never see or store your card or banking
+        details.</li>
+        <li><strong>Messages:</strong> anything you send us on WhatsApp, Instagram, or email, such as your
+        order confirmation.</li>
+        <li><strong>Newsletter:</strong> your email address, if you sign up.</li>
+        <li><strong>On your device:</strong> your cart, wishlist, and cookie choice are saved in your browser
+        so the site works the way you expect (see section 8).</li>
+    </ul>
+
+    <h2>3. Why We Use It</h2>
+    <ul>
+        <li>To process your payment, pack your order, and arrange delivery <em>(to carry out our contract with
+        you)</em>.</li>
+        <li>To contact you about your order, including WhatsApp or email updates and delivery collection
+        details.</li>
+        <li>To handle returns, exchanges, refunds, and queries.</li>
+        <li>To send you news, drops, and offers <em>(only with your consent)</em>.</li>
+        <li>To keep records the law requires and to protect the site from fraud and misuse.</li>
+    </ul>
+
+    <h2>4. Who We Share It With</h2>
+    <p>We share information only with the people who help us serve you:</p>
+    <ul>
+        <li><strong>Paystack</strong>, which processes your payment.</li>
+        <li><strong>PEP / PAXI</strong>, which delivers your parcel. They receive your name, cell number, and
+        collection point so you can be notified and collect your order.</li>
+        <li><strong>Service providers</strong> that help us run the shop: <strong>Vercel</strong> (website
+        hosting), <strong>Google Firebase</strong> (where we store order records), <strong>Resend</strong>
+        (which sends our order email alerts), and messaging platforms like <strong>WhatsApp</strong>.</li>
+        <li><strong>Authorities</strong>, where the law requires us to.</li>
+    </ul>
+    <p>We do not sell, rent, or share your personal information with third parties for their own marketing.
+    Some of our providers may store or process information outside South Africa; where that happens, we only
+    use providers that protect it to a reasonable standard.</p>
+
+    <h2>5. How Long We Keep It</h2>
+    <p>We keep order and contact details for as long as we need them to fulfil your order and handle any
+    returns or queries. Financial and order records are kept for the period South African law requires
+    (generally five years). Newsletter details are kept until you unsubscribe. After that we delete or
+    anonymise the information.</p>
+
+    <h2>6. How We Protect It</h2>
+    <p>We take reasonable technical and organisational steps to keep your information safe, including using
+    Paystack's secure payment system and limiting who can see order details. No online system is perfectly
+    secure, so please also look after your PAXI collection code and the devices you shop on.</p>
+
+    <h2>7. Your Rights</h2>
+    <p>Under POPIA you can ask us to:</p>
+    <ul>
+        <li>Tell you what personal information we hold about you and give you a copy.</li>
+        <li>Correct information that is wrong or out of date.</li>
+        <li>Delete your information (we may need to keep some order records because the law requires it).</li>
+        <li>Stop using your information for marketing, or withdraw consent you gave earlier.</li>
+    </ul>
+    <p>To make a request, email <a href="mailto:discreteclothing24@gmail.com">discreteclothing24@gmail.com</a>
+    or message us on <a href="https://wa.me/27699478580">WhatsApp</a>. We may need to confirm who you are
+    first. If you are unhappy with how we handled your information, you can also complain to the
+    Information Regulator of South Africa at
+    <a href="https://inforegulator.org.za" target="_blank" rel="noopener noreferrer">inforegulator.org.za</a>.</p>
+
+    <h2>8. Cookies &amp; Browser Storage</h2>
+    <p>We use cookies and similar browser storage to keep your cart and wishlist, remember your cookie choice,
+    and keep checkout working. <strong>Essential</strong> items are always on because the shop cannot work
+    without them. <strong>Analytics</strong> and <strong>marketing</strong> items are optional and only used
+    if you accept them in the cookie banner. You can change your choice any time with
+    <em>Cookie Settings</em> in the footer of our home page, or by clearing your browser data.</p>
+
+    <h2>9. Young People</h2>
+    <p>If you are under 18, please get a parent or guardian's permission before placing an order or giving us
+    your personal information.</p>
+
+    <h2>10. Changes to This Policy</h2>
+    <p>We may update this policy from time to time. The latest version is always on this page, with the date
+    at the top.</p>
+
+    <h2>11. Contact</h2>
+    <p>Questions about your privacy? Email
+    <a href="mailto:discreteclothing24@gmail.com">discreteclothing24@gmail.com</a> or message us on
+    <a href="https://wa.me/27699478580">WhatsApp</a>.</p>
+
+    <div class="terms-note">
+        This page is a plain-language summary of how DISCRETE handles your information. It is not a
+        substitute for formal legal advice.
+    </div>
+
+    <a href="index.html" class="terms-back">← Back to Home</a>
+</div>
+
+<a href="https://wa.me/27699478580?text=Hi%20DISCRETE%20Studio%2C%20I'm%20inquiring%20about%20an%20item..."
+   class="whatsapp-float"
+   target="_blank"
+   rel="noopener noreferrer"
+   aria-label="Chat with DISCRETE on WhatsApp">
+    <svg viewBox="0 0 24 24" class="whatsapp-icon">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.455 5.703 1.456h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+</a>
+
+<button type="button" id="backToTop" class="back-to-top" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" class="arrow-icon">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+    </svg>
+</button>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <h4>DISCRETE</h4>
+            <p>The art of being seen without being loud. Premium streetwear tailored for the modern youth.</p>
+        </div>
+        <div class="footer-links">
+            <h5>Collections</h5>
+            <ul>
+                <li><a href="new-arrivals.html">New Arrivals</a></li>
+                <li><a href="t-shirts.html">T-Shirts</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h5>Assistance</h5>
+            <ul>
+                <li><a href="faq.html">FAQ</a></li>
+                <li><a href="track-order.html">Track Order</a></li>
+                <li><a href="shipping.html">Shipping Details</a></li>
+                <li><a href="refund-policy.html">Returns &amp; Exchanges</a></li>
+                <li><a href="sizing-guide.html">Sizing Guide</a></li>
+                <li><a href="mailto:discreteclothing24@gmail.com">Contact Us</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h5>Company</h5>
+            <ul>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="index.html#stores">Studio &amp; Events</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h5>Community</h5>
+            <ul>
+                <li><a href="https://www.instagram.com/discrete_clothin?igsh=MXcyNnM3amw1ZTVlOA==" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-legal">
+        <a href="terms.html">Terms &amp; Conditions</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="refund-policy.html">Refund &amp; Cancellation Policy</a>
+        <a href="index.html#cookies" data-cookie-settings>Cookie Settings</a>
+    </div>
+    <div class="footer-bottom">
+        <div>© 2026 DISCRETE STUDIO. All Rights Reserved.</div>
+        <div>Designed for the Loud Minority, Built by the Silent Majority.</div>
+    </div>
+</footer>
+
+<script src="js/scripts.js"></script>
+    <script src="js/storefront.js"></script>
+</body>
+</html>

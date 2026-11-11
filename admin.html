@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin | DISCRETE</title>
+<meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ── RESET & BRAND BASE ── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #0a0a0a;
+            --white: #ffffff;
+            --grey: #f5f5f5;
+            --grey-dark: #1a1a1a;
+            --grey-mid: #888888;
+            --grey-light: #e5e5e5;
+            --green: #2d7a31;
+            --red: #c0392b;
+            --gold: #d4a030;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --radius: 2px;
+            --font: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --mono: 'Space Mono', monospace;
+            --display: 'Bebas Neue', Impact, sans-serif;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--grey);
+            color: var(--black);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--grey);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--black);
+        }
+
+        /* ── ADMIN WRAPPER ── */
+        .admin-wrap {
+            width: 100%;
+            max-width: 1280px;
+            background: var(--white);
+            border: 1px solid var(--grey-light);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            min-height: 600px;
+            position: relative;
+        }
+
+        /* ── LOGIN SCREEN ── */
+        #loginScreen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 600px;
+            padding: 40px 20px;
+        }
+
+        .login-box {
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            padding: 48px 36px;
+            border: 1px solid var(--grey-light);
+            border-radius: var(--radius);
+            background: var(--white);
+        }
+
+        .login-box .brand {
+            font-family: var(--display);
+            font-size: 42px;
+            letter-spacing: 0.25em;
+            margin-bottom: 6px;
+            line-height: 1;
+        }
+
+        .login-box .sub {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--grey-mid);
+            margin-bottom: 36px;
+            font-weight: 500;
+        }
+
+        .login-box label {
+            display: block;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--grey-mid);
+            margin-bottom: 6px;
+        }
+
+        .login-box input[type="password"] {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--grey-light);
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-family: var(--font);
+            outline: none;
+            transition: border 0.2s;
+            background: var(--white);
+            color: var(--black);
+        }
+
+        .login-box input[type="password"]:focus {
+            border-color: var(--black);
+        }
+
+        .login-box .login-btn {
+            width: 100%;
+            margin-top: 18px;
+            padding: 15px;
+            background: var(--black);
+            color: var(--white);
+            border: 1px solid var(--black);
+            border-radius: var(--radius);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font);
+        }
+
+        .login-box .login-btn:hover {
+            background: var(--white);
+            color: var(--black);
+        }
+
+        .login-box .error-msg {
+            margin-top: 14px;
+            font-size: 12px;
+            color: var(--red);
+            min-height: 20px;
+        }
+
+        /* ── DASHBOARD ── */
+        #dashboardScreen {
+            display: none;
+            padding: 32px 36px 40px;
+        }
+
+        #dashboardScreen.active {
+            display: block;
+        }
+
+        /* ── ADMIN HEADER ── */
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--grey-light);
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .admin-header .left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .admin-header .left h1 {
+            font-family: var(--display);
+            font-size: 28px;
+            letter-spacing: 0.15em;
+            line-height: 1;
+        }
+
+        .admin-header .left .badge {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            background: var(--black);
+            color: var(--white);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+
+        .admin-header .right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-header .right .admin-email {
+            font-size: 12px;
+            color: var(--grey-mid);
+            font-weight: 500;
+        }
+
+        .admin-header .right .logout-btn {
+            padding: 8px 20px;
+            background: transparent;
+            border: 1px solid var(--grey-light);
+            border-radius: var(--radius);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font);
+            color: var(--black);
+        }
+
+        .admin-header .right .logout-btn:hover {
+            border-color: var(--black);
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .admin-header .right .settings-btn {
+            padding: 8px 12px;
+            background: transparent;
+            border: 1px solid var(--grey-light);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+            color: var(--black);
+            font-family: var(--font);
+        }
+
+        .admin-header .right .settings-btn:hover {
+            border-color: var(--black);
+        }
+
+        /* ── STATS GRID ── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 36px;
+        }
+
+        .stat-card {
+            background: var(--grey);
+            border-radius: var(--radius);
+            padding: 22px 20px;
+            text-align: center;
+            border: 1px solid transparent;
+            transition: border 0.2s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--grey-light);
+        }
+
+        .stat-card .stat-number {
+            font-family: var(--mono);
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1;
+            color: var(--black);
+        }
+
+        .stat-card .stat-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--grey-mid);
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .stat-card .stat-number.green {
+            color: var(--green);
+        }
+        .stat-card .stat-number.gold {
+            color: var(--gold);
+        }
+
+        /* ── TOOLBAR ── */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .toolbar .left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar .left h2 {
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .toolbar .left .order-count {
+            font-size: 12px;
+            color: var(--grey-mid);
+            font-weight: 500;
+        }
+
+        .toolbar .right {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar .right select,
+        .toolbar .right input {
+            padding: 8px 14px;
+            border: 1px solid var(--grey-light);
+            border-radius: var(--radius);
+            font-size: 12px;
+            font-family: var(--font);
+            background: var(--white);
+            color: var(--black);
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .toolbar .right select:focus,
+        .toolbar .right input:focus {
+            border-color: var(--black);
+        }
+
+        .toolbar .right .export-btn {
+            padding: 8px 18px;
+            background: var(--black);
+            color: var(--white);
+            border: 1px solid var(--black);
+            border-radius: var(--radius);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font);
+        }
+
+        .toolbar .right .export-btn:hover {
+            background: var(--white);
+            color: var(--black);
+        }
+
+        /* ── ORDER TABLE ── */
+        .table-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--grey-light);
+            border-radius: var(--radius);
+            background: var(--white);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        table th {
+            text-align: left;
+            padding: 14px 16px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 700;
+            color: var(--grey-mid);
+            background: var(--grey);
+            border-bottom: 1px solid var(--grey-light);
+            white-space: nowrap;
+        }
+
+        table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--grey-light);
+            vertical-align: middle;
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        table tr:hover td {
+            background: #fafaf9;
+        }
+
+        .order-id {
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--black);
+        }
+
+        .order-customer {
+            font-weight: 500;
+        }
+
+        .order-customer .email {
+            font-size: 11px;
+            color: var(--grey-mid);
+            font-weight: 400;
+            display: block;
+        }
+
+        .order-total {
+            font-weight: 700;
+            font-family: var(--mono);
+            font-size: 13px;
+        }
+
+        .order-date {
+            font-size: 12px;
+            color: var(--grey-mid);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .status-badge.pending {
+            background: #fff3e0;
+            color: #e67e22;
+        }
+        .status-badge.paid {
+            background: #e8f5e9;
+            color: var(--green);
+        }
+        .status-badge.shipped {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+        .status-badge.delivered {
+            background: #ede7f6;
+            color: #5e35b1;
+        }
+        .status-badge.cancelled {
+            background: #ffebee;
+            color: var(--red);
+        }
+
+        .status-select {
+            padding: 4px 8px;
+            border: 1px solid var(--grey-light);
+            border-radius: var(--radius);
+            font-size: 11px;
+            font-family: var(--font);
+            background: var(--white);
+            color: var(--black);
+            outline: none;
+            cursor: pointer;
+            transition: border 0.2s;
+            font-weight: 500;
+        }
+
+        .status-select:focus {
+            border-color: var(--black);
+        }
+
+        .order-items-toggle {
+            background: none;
+            border: none;
+            color: var(--grey-mid);
+            cursor: pointer;
+            font-size: 12px;
+            text-decoration: underline;
+            font-family: var(--font);
+            padding: 0;
+            transition: color 0.2s;
+        }
+
+        .order-items-toggle:hover {
+            color: var(--black);
+        }
+
+        .order-items-detail {
+            display: none;
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--grey-mid);
+            line-height: 1.7;
+            padding: 8px 12px;
+            background: var(--grey);
+            border-radius: var(--radius);
+        }
+
+        .order-items-detail.open {
+            display: block;
+        }
+
+        .order-items-detail .item-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 2px 0;
+            border-bottom: 1px solid var(--grey-light);
+        }
+
+        .order-items-detail .item-line:last-child {
+            border-bottom: none;
+        }
+
+        /* ── EMPTY STATE ── */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--grey-mid);
+        }
+
+        .empty-state .icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        .empty-state h3 {
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--black);
+            margin-bottom: 6px;
+        }
+
+        .empty-state p {
+            font-size: 13px;
+            color: var(--grey-mid);
+        }
+
+        /* ── SETTINGS MODAL ── */
+        .settings-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(3px);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .settings-overlay.active {
+            display: flex;
+        }
+
+        .settings-modal {
+            background: var(--white);
+            max-width: 440px;
+            width: 100%;
+            padding: 36px 32px;
+            border-radius: var(--radius);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .settings-modal h2 {
+            font-family: var(--display);
+            font-size: 24px;
+            letter-spacing: 0.15em;
+            margin-bottom: 4px;
+        }
+
+        .settings-modal .sub {
+            font-size: 12px;
+            color: var(--grey-mid);
+            margin-bottom: 24px;
+        }
+
+        .settings-modal label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--grey-mid);
+            margin-bottom: 4px;
+        }
+
+        .settings-modal input[type="password"] {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--grey-light);
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-family: var(--font);
+            outline: none;
+            transition: border 0.2s;
+            margin-bottom: 14px;
+            background: var(--white);
+            color: var(--black);
+        }
+
+        .settings-modal input[type="password"]:focus {
+            border-color: var(--black);
+        }
+
+        .settings-modal .btn-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        .settings-modal .btn-row button {
+            flex: 1;
+            padding: 12px;
+            border-radius: var(--radius);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font);
+            border: 1px solid var(--grey-light);
+            background: var(--white);
+            color: var(--black);
+        }
+
+        .settings-modal .btn-row button.primary {
+            background: var(--black);
+            color: var(--white);
+            border-color: var(--black);
+        }
+
+        .settings-modal .btn-row button.primary:hover {
+            background: var(--white);
+            color: var(--black);
+        }
+
+        .settings-modal .btn-row button:not(.primary):hover {
+            border-color: var(--black);
+        }
+
+        .settings-modal .msg {
+            font-size: 12px;
+            margin-top: 12px;
+            min-height: 20px;
+        }
+
+        .settings-modal .msg.success {
+            color: var(--green);
+        }
+        .settings-modal .msg.error {
+            color: var(--red);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .admin-wrap {
+                border-radius: 0;
+                min-height: auto;
+            }
+
+            #dashboardScreen {
+                padding: 20px 16px 30px;
+            }
+
+            .admin-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .admin-header .right {
+                width: 100%;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+
+            .toolbar .left {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .toolbar .right {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .toolbar .right select,
+            .toolbar .right input {
+                width: 100%;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            table th,
+            table td {
+                padding: 10px 12px;
+            }
+
+            .order-id {
+                font-size: 10px;
+            }
+            .order-total {
+                font-size: 11px;
+            }
+
+            .login-box {
+                padding: 32px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table th,
+            table td {
+                padding: 8px 10px;
+                font-size: 11px;
+            }
+
+            .status-badge {
+                font-size: 9px;
+                padding: 3px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================ -->
+    <!-- ADMIN WRAPPER                                                 -->
+    <!-- ============================================================ -->
+    <div class="admin-wrap">
+
+        <!-- ─── LOGIN SCREEN ─── -->
+        <div id="loginScreen">
+            <div class="login-box">
+                <div class="brand">DISCRETE</div>
+                <div class="sub">Studio Admin</div>
+                <label for="adminEmail">Admin Email</label>
+                <input type="email" id="adminEmail" placeholder="you@discrete.co.za" autocomplete="username" style="margin-bottom:16px;" />
+                <label for="adminPassword">Password</label>
+                <input type="password" id="adminPassword" placeholder="Enter password" autocomplete="current-password" />
+                <button class="login-btn" id="adminLoginBtn">Login</button>
+                <div class="error-msg" id="loginError"></div>
+            </div>
+        </div>
+
+        <!-- ─── DASHBOARD SCREEN ─── -->
+        <div id="dashboardScreen">
+
+            <!-- HEADER -->
+            <div class="admin-header">
+                <div class="left">
+                    <h1>DISCRETE</h1>
+                    <span class="badge">Admin</span>
+                </div>
+                <div class="right">
+                    <span class="admin-email" id="adminEmailDisplay">admin@discrete.co.za</span>
+                    <button class="settings-btn" id="settingsBtn" title="Change password">⚙️</button>
+                    <button class="logout-btn" id="logoutBtn">Log Out</button>
+                </div>
+            </div>
+
+            <!-- STATS -->
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card">
+                    <div class="stat-number" id="statTotalOrders">0</div>
+                    <div class="stat-label">Total Orders</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number gold" id="statTotalRevenue">R0</div>
+                    <div class="stat-label">Total Revenue</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="statPendingOrders">0</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number green" id="statPaidOrders">0</div>
+                    <div class="stat-label">Paid</div>
+                </div>
+            </div>
+
+            <!-- TOOLBAR -->
+            <div class="toolbar">
+                <div class="left">
+                    <h2>Orders</h2>
+                    <span class="order-count" id="orderCount">0 orders</span>
+                </div>
+                <div class="right">
+                    <select id="statusFilter">
+                        <option value="all">All Statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="paid">Paid</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                    <input type="text" id="searchInput" placeholder="Search customer or order ID..." />
+                    <button class="export-btn" id="exportBtn">Export CSV</button>
+                </div>
+            </div>
+
+            <!-- TABLE -->
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order</th>
+                            <th>Customer</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th style="text-align:right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderTableBody">
+                        <!-- rows injected by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- empty state (shown via JS) -->
+            <div id="emptyState" class="empty-state" style="display:none;">
+                <div class="icon">📦</div>
+                <h3>No orders found</h3>
+                <p>Orders will appear here once customers complete checkout.</p>
+            </div>
+
+        </div><!-- /dashboardScreen -->
+    </div><!-- /admin-wrap -->
+
+    <!-- ============================================================ -->
+    <!-- SETTINGS MODAL                                                -->
+    <!-- ============================================================ -->
+    <div class="settings-overlay" id="settingsOverlay">
+        <div class="settings-modal">
+            <h2>⚙️ Settings</h2>
+            <div class="sub">Change your admin password</div>
+
+            <label for="currentPassword">Current Password</label>
+            <input type="password" id="currentPassword" placeholder="Enter current password" />
+
+            <label for="newPassword">New Password</label>
+            <input type="password" id="newPassword" placeholder="Enter new password (min 6 characters)" />
+
+            <label for="confirmPassword">Confirm New Password</label>
+            <input type="password" id="confirmPassword" placeholder="Confirm new password" />
+
+            <div class="btn-row">
+                <button id="settingsCancelBtn">Cancel</button>
+                <button class="primary" id="settingsSaveBtn">Update Password</button>
+            </div>
+            <div class="msg" id="settingsMsg"></div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- JAVASCRIPT                                                    -->
+    <!-- ============================================================ -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import {
+            getAuth,
+            onAuthStateChanged,
+            signInWithEmailAndPassword,
+            signOut,
+            EmailAuthProvider,
+            reauthenticateWithCredential,
+            updatePassword
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        // ── Firebase web config ──────────────────────────────────────
+        // These values come from Firebase Console > Project Settings > General > "Your apps".
+        // Unlike ADMIN_SECRET, this config is NOT a secret — it's meant to be public,
+        // it just tells the browser which Firebase project to talk to.
+        const firebaseConfig = {
+            apiKey: "AIzaSyBlZZzankk_8ohQczGPlDAZMOcIXbh2Bwk",
+           authDomain: "discrete-studio.firebaseapp.com",
+             projectId: "discrete-studio",
+        };
+
+        const firebaseApp = initializeApp(firebaseConfig);
+        const auth = getAuth(firebaseApp);
+
+        (function() {
+            'use strict';
+
+            // ─── CONFIG ────────────────────────────────────────────────
+            // (No client-side secrets or passwords here anymore — Firebase Auth
+            // handles identity, and orders.js verifies the ID token server-side.)
+
+            // ─── DOM REFS ──────────────────────────────────────────────
+            const loginScreen = document.getElementById('loginScreen');
+            const dashboardScreen = document.getElementById('dashboardScreen');
+            const passwordInput = document.getElementById('adminPassword');
+            const emailInput = document.getElementById('adminEmail');
+            const loginBtn = document.getElementById('adminLoginBtn');
+            const loginError = document.getElementById('loginError');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const adminEmailDisplay = document.getElementById('adminEmailDisplay');
+
+            const orderTableBody = document.getElementById('orderTableBody');
+            const emptyState = document.getElementById('emptyState');
+            const orderCount = document.getElementById('orderCount');
+            const statTotalOrders = document.getElementById('statTotalOrders');
+            const statTotalRevenue = document.getElementById('statTotalRevenue');
+            const statPendingOrders = document.getElementById('statPendingOrders');
+            const statPaidOrders = document.getElementById('statPaidOrders');
+
+            const statusFilter = document.getElementById('statusFilter');
+            const searchInput = document.getElementById('searchInput');
+            const exportBtn = document.getElementById('exportBtn');
+
+            const settingsOverlay = document.getElementById('settingsOverlay');
+            const settingsBtn = document.getElementById('settingsBtn');
+            const settingsCancelBtn = document.getElementById('settingsCancelBtn');
+            const settingsSaveBtn = document.getElementById('settingsSaveBtn');
+            const settingsMsg = document.getElementById('settingsMsg');
+            const currentPasswordInput = document.getElementById('currentPassword');
+            const newPasswordInput = document.getElementById('newPassword');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+
+            // ─── AUTH HELPERS (Firebase) ───────────────────────────────
+            async function getIdToken() {
+                if (!auth.currentUser) throw new Error('Not signed in');
+                // getIdToken() auto-refreshes if the cached token is expired
+                return auth.currentUser.getIdToken();
+            }
+
+            // ─── ORDER MANAGEMENT (Firestore via /api/orders) ─────────
+            async function getOrders(status) {
+                const qs = status && status !== 'all' ? `?status=${status}` : '';
+                const token = await getIdToken();
+                const res = await fetch(`/api/orders${qs}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                if (!res.ok) throw new Error('Failed to fetch orders');
+                const { orders } = await res.json();
+                return orders || [];
+            }
+
+            async function updateOrderStatus(orderId, newStatus) {
+                const token = await getIdToken();
+                const res = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ id: orderId, status: newStatus })
+                });
+                if (!res.ok) throw new Error('Failed to update order status');
+            }
+
+            function generateOrderId() {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let result = 'DSC-';
+                for (let i = 0; i < 6; i++) {
+                    result += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return result;
+            }
+
+            function formatDate(dateStr) {
+                const d = new Date(dateStr);
+                return d.toLocaleDateString('en-ZA', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit',
+                        minute: '2-digit' });
+            }
+
+            function formatCurrency(amount) {
+                return 'R' + Number(amount).toFixed(2);
+            }
+
+            function escapeHtml(str) {
+    return String(str ?? '').replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+}
+
+            function getStatusBadge(status) {
+                const s = (status || 'pending').toLowerCase();
+                const classes = {
+                    pending: 'status-badge pending',
+                    paid: 'status-badge paid',
+                    shipped: 'status-badge shipped',
+                    delivered: 'status-badge delivered',
+                    cancelled: 'status-badge cancelled'
+                };
+                const label = s.charAt(0).toUpperCase() + s.slice(1);
+                return `<span class="${classes[s] || classes.pending}">${escapeHtml(label)}</span>`;
+            }
+
+            // ─── RENDER DASHBOARD ─────────────────────────────────────
+            async function renderDashboard() {
+                orderTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:30px;color:#888;font-size:12px;letter-spacing:.08em;">Loading orders…</td></tr>';
+                emptyState.style.display = 'none';
+
+                let allOrders = [];
+                try {
+                    allOrders = await getOrders();
+                } catch(err) {
+                    orderTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:30px;color:#c0392b;font-size:12px;">Failed to load orders. Check that you are signed in with an admin account.</td></tr>';
+                    return;
+                }
+
+                const filter = statusFilter.value;
+                const search = searchInput.value.toLowerCase().trim();
+
+                let orders = [...allOrders];
+
+                // Apply filters
+                if (filter !== 'all') {
+                    orders = orders.filter(o => (o.status || 'pending').toLowerCase() === filter);
+                }
+                if (search) {
+                    orders = orders.filter(o => {
+                        const id    = (o.id || '').toLowerCase();
+                        const name  = ((o.customer?.firstName || '') + ' ' + (o.customer?.lastName || '')).toLowerCase();
+                        const email = (o.customer?.email || '').toLowerCase();
+                        return id.includes(search) || name.includes(search) || email.includes(search);
+                    });
+                }
+
+                // Stats (all orders, unfiltered)
+                const totalOrders   = allOrders.length;
+                const totalRevenue  = allOrders
+                    .filter(o => ['paid', 'shipped', 'delivered'].includes((o.status || 'pending').toLowerCase()))
+                    .reduce((sum, o) => sum + (o.total || 0), 0);
+                const pendingCount  = allOrders.filter(o => (o.status || 'pending') === 'pending').length;
+                const paidCount     = allOrders.filter(o => o.status === 'paid').length;
+
+                statTotalOrders.textContent   = totalOrders;
+                statTotalRevenue.textContent  = formatCurrency(totalRevenue);
+                statPendingOrders.textContent = pendingCount;
+                statPaidOrders.textContent    = paidCount;
+                orderCount.textContent        = orders.length + ' order' + (orders.length !== 1 ? 's' : '');
+
+                // Render table
+                if (orders.length === 0) {
+                    orderTableBody.innerHTML = '';
+                    emptyState.style.display = 'block';
+                    return;
+                }
+                emptyState.style.display = 'none';
+
+let html = '';
+orders.forEach((order, idx) => {
+    const status = (order.status || 'pending').toLowerCase();
+    const customerName = escapeHtml((order.customer?.firstName || '') + ' ' + (order.customer?.lastName || ''));
+    const email = escapeHtml(order.customer?.email || '—');
+    const items = order.items || [];
+    const itemSummary = items.length + ' item' + (items.length !== 1 ? 's' : '');
+
+    // Build items detail HTML
+    let itemsDetailHtml = '';
+    items.forEach(item => {
+        const qty = Number(item.quantity) || 1;
+        const price = Number(item.price) || 0;
+        const color = item.color ? ' · ' + escapeHtml(item.color.charAt(0).toUpperCase() + item.color.slice(1)) : '';
+        itemsDetailHtml += `
+                <div class="item-line">
+                    <span>${escapeHtml(item.name)} ${color} · ${escapeHtml(item.size)} × ${qty}</span>
+                    <span>${formatCurrency(price * qty)}</span>
+                </div>
+            `;
+    });
+
+    const safeOrderId = escapeHtml(order.id || '—');
+
+    html += `
+            <tr data-order-id="${safeOrderId}">
+                <td><span class="order-id">${safeOrderId}</span></td>
+                <td>
+                    <div class="order-customer">${customerName || '—'}</div>
+                    <span class="email">${email}</span>
+                </td>
+                <td>
+                    <button class="order-items-toggle" data-target="items-${idx}" data-count="${items.length}">${itemSummary}</button>
+                    <div class="order-items-detail" id="items-${idx}">
+                        ${itemsDetailHtml}
+                    </div>
+                </td>
+                <td><span class="order-total">${formatCurrency(order.total || 0)}</span></td>
+                <td><span class="order-date">${escapeHtml(formatDate(order.date || Date.now()))}</span></td>
+                <td>${getStatusBadge(status)}</td>
+                <td style="text-align:right;">
+                    <select class="status-select" data-order-id="${safeOrderId}">
+                        <option value="pending" ${status === 'pending' ? 'selected' : ''}>Pending</option>
+                        <option value="paid" ${status === 'paid' ? 'selected' : ''}>Paid</option>
+                        <option value="shipped" ${status === 'shipped' ? 'selected' : ''}>Shipped</option>
+                        <option value="delivered" ${status === 'delivered' ? 'selected' : ''}>Delivered</option>
+                        <option value="cancelled" ${status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                    </select>
+                </td>
+            </tr>
+        `;
+});
+
+                orderTableBody.innerHTML = html;
+
+                // ─── EVENT: toggle items detail ──────────────────────
+                document.querySelectorAll('.order-items-toggle').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const targetId = this.getAttribute('data-target');
+                        const detail = document.getElementById(targetId);
+                        if (detail) {
+                            detail.classList.toggle('open');
+                            const count = Number(this.getAttribute('data-count'));
+                            this.textContent = detail.classList.contains('open')
+                                ? 'Hide items'
+                                : count + ' item' + (count !== 1 ? 's' : '');
+                        }
+                    });
+                });
+
+                // ─── EVENT: status change ────────────────────────────
+                document.querySelectorAll('.status-select').forEach(sel => {
+                    sel.addEventListener('change', async function() {
+                        const orderId   = this.getAttribute('data-order-id');
+                        const newStatus = this.value;
+                        this.disabled   = true;
+                        try {
+                            await updateOrderStatus(orderId, newStatus);
+                            await renderDashboard();
+                        } catch(e) {
+                            alert('Failed to update status. Please try again.');
+                            this.disabled = false;
+                        }
+                    });
+                });
+            }
+
+            // ─── EXPORT CSV ────────────────────────────────────────────
+            async function exportCSV() {
+                let orders = [];
+                try { orders = await getOrders(); } catch(e) {}
+                if (orders.length === 0) {
+                    alert('No orders to export.');
+                    return;
+                }
+
+                const headers = ['Order ID', 'Customer', 'Email', 'Phone', 'Address', 'Items', 'Total', 'Status', 'Date'];
+                const rows = orders.map(o => {
+                    const name = (o.customer?.firstName || '') + ' ' + (o.customer?.lastName || '');
+                    const email = o.customer?.email || '';
+                    const phone = o.customer?.phone || '';
+                    const addr = o.shipping?.address || '';
+                    const items = (o.items || []).map(i =>
+                        `${i.name} (${i.size}${i.color ? ', ' + i.color : ''}) × ${i.quantity || 1}`
+                    ).join('; ');
+                    return [
+                        o.id || '',
+                        name,
+                        email,
+                        phone,
+                        addr,
+                        items,
+                        (o.total || 0).toFixed(2),
+                        (o.status || 'pending').toUpperCase(),
+                        formatDate(o.date || Date.now())
+                    ];
+                });
+
+                const csvContent = [
+                    headers.join(','),
+                    ...rows.map(r => r.map(v => `"${v.replace(/"/g, '""')}"`).join(','))
+                ].join('\n');
+
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `discrete_orders_${new Date().toISOString().slice(0,10)}.csv`;
+                link.click();
+                URL.revokeObjectURL(link.href);
+            }
+
+            // ─── AUTH ──────────────────────────────────────────────────
+            // Firebase tells us when sign-in state changes (page load, login, logout).
+            // We still must check the `admin` custom claim — being signed in to
+            // *any* Firebase account isn't enough, only the tagged admin account.
+            onAuthStateChanged(auth, async function(user) {
+                if (!user) {
+                    showLogin();
+                    return;
+                }
+                try {
+                    const tokenResult = await user.getIdTokenResult();
+                    if (tokenResult.claims.admin) {
+                        adminEmailDisplay.textContent = user.email;
+                        showDashboard();
+                    } else {
+                        loginError.textContent = 'This account does not have admin access.';
+                        await signOut(auth);
+                    }
+                } catch (e) {
+                    loginError.textContent = 'Could not verify admin access.';
+                    await signOut(auth);
+                }
+            });
+
+            function showLogin() {
+                loginScreen.style.display = 'flex';
+                dashboardScreen.classList.remove('active');
+                dashboardScreen.style.display = 'none';
+                passwordInput.value = '';
+                loginError.textContent = '';
+            }
+
+            function showDashboard() {
+                loginScreen.style.display = 'none';
+                dashboardScreen.style.display = 'block';
+                // Use requestAnimationFrame to ensure display:block is applied before adding class
+                requestAnimationFrame(() => {
+                    dashboardScreen.classList.add('active');
+                });
+                renderDashboard();
+            }
+
+            function handleLogin() {
+                const email = emailInput.value.trim();
+                const pass = passwordInput.value;
+                loginError.textContent = '';
+                loginBtn.disabled = true;
+                signInWithEmailAndPassword(auth, email, pass)
+                    .catch(function(err) {
+                        loginError.textContent = 'Incorrect email or password.';
+                        passwordInput.focus();
+                        passwordInput.select();
+                    })
+                    .finally(function() {
+                        loginBtn.disabled = false;
+                    });
+                // onAuthStateChanged above handles showing the dashboard once
+                // sign-in succeeds and the admin claim is confirmed.
+            }
+
+            function handleLogout() {
+                signOut(auth);
+            }
+
+            // ─── SETTINGS ──────────────────────────────────────────────
+            function openSettings() {
+                settingsOverlay.classList.add('active');
+                currentPasswordInput.value = '';
+                newPasswordInput.value = '';
+                confirmPasswordInput.value = '';
+                settingsMsg.textContent = '';
+                settingsMsg.className = 'msg';
+            }
+
+            function closeSettings() {
+                settingsOverlay.classList.remove('active');
+            }
+
+            function handleSettingsSave() {
+                const current = currentPasswordInput.value;
+                const newPass = newPasswordInput.value;
+                const confirm = confirmPasswordInput.value;
+                const user = auth.currentUser;
+
+                if (newPass.length < 6) {
+                    settingsMsg.textContent = 'New password must be at least 6 characters.';
+                    settingsMsg.className = 'msg error';
+                    return;
+                }
+
+                if (newPass !== confirm) {
+                    settingsMsg.textContent = 'New passwords do not match.';
+                    settingsMsg.className = 'msg error';
+                    return;
+                }
+
+                const credential = EmailAuthProvider.credential(user.email, current);
+                reauthenticateWithCredential(user, credential)
+                    .then(function() {
+                        return updatePassword(user, newPass);
+                    })
+                    .then(function() {
+                        settingsMsg.textContent = 'Password updated successfully!';
+                        settingsMsg.className = 'msg success';
+                        setTimeout(closeSettings, 1200);
+                    })
+                    .catch(function(err) {
+                        settingsMsg.textContent = 'Current password is incorrect.';
+                        settingsMsg.className = 'msg error';
+                    });
+            }
+
+            // ─── EVENT BINDING ────────────────────────────────────────
+            loginBtn.addEventListener('click', handleLogin);
+            passwordInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') handleLogin();
+            });
+
+            logoutBtn.addEventListener('click', handleLogout);
+
+            statusFilter.addEventListener('change', renderDashboard);
+            searchInput.addEventListener('input', renderDashboard);
+            exportBtn.addEventListener('click', exportCSV);
+
+            settingsBtn.addEventListener('click', openSettings);
+            settingsCancelBtn.addEventListener('click', closeSettings);
+            settingsSaveBtn.addEventListener('click', handleSettingsSave);
+
+            // Close settings on overlay click
+            settingsOverlay.addEventListener('click', function(e) {
+                if (e.target === this) closeSettings();
+            });
+
+            // ─── INIT ──────────────────────────────────────────────────
+            // (No manual init call needed — onAuthStateChanged fires once on
+            // page load with the current user, or null, and shows the right screen.)
+
+            // ─── KEYBOARD SHORTCUT: Escape to close settings ──────────
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    if (settingsOverlay.classList.contains('active')) closeSettings();
+                }
+            });
+
+            // ─── EXPOSE for external use ──────────────────────────────
+            window.discreteAdmin = {
+                getOrders:      getOrders,
+                formatCurrency: formatCurrency
+            };
+
+        })();
+    </script>
+
+</body>
+</html>

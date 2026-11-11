@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Your Cart | DISCRETE</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { padding-top: 115px; background: #f7f6f4; }
+        .terms-page {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 48px 20px 80px;
+        }
+        .terms-page h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 34px;
+            letter-spacing: .06em;
+            margin-bottom: 8px;
+        }
+        .terms-updated {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 36px;
+        }
+        .terms-page h2 {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            margin: 36px 0 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0ddd8;
+        }
+        .terms-page p, .terms-page li {
+            font-size: 14px;
+            line-height: 1.75;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .terms-page ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .terms-note {
+            background: #fff;
+            border: 1px solid #e0ddd8;
+            padding: 18px 20px;
+            font-size: 13px;
+            color: #555;
+            margin-top: 40px;
+        }
+        .terms-back {
+            display: inline-block;
+            margin-top: 32px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            color: #0a0a0a;
+            text-decoration: underline;
+        }
+
+        .terms-page a { color: #0a0a0a; }
+        .terms-callout {
+            background: #fff;
+            border-left: 3px solid #0a0a0a;
+            padding: 16px 20px;
+            margin: 0 0 28px;
+        }
+        .terms-callout p, .terms-callout li { margin-bottom: 6px; }
+        .terms-callout ul { margin-bottom: 0; }
+        .terms-todo {
+            background: #fff3cd;
+            border: 1px dashed #b58900;
+            padding: 10px 14px;
+            font-size: 13px;
+            margin-bottom: 14px;
+        }
+        .terms-table-wrap { overflow-x: auto; margin: 6px 0 18px; }
+        .terms-table { width: 100%; border-collapse: collapse; background: #fff; font-size: 13px; }
+        .terms-table th, .terms-table td {
+            border: 1px solid #e0ddd8;
+            padding: 10px 12px;
+            text-align: left;
+            line-height: 1.5;
+            white-space: nowrap;
+        }
+        .terms-table th { background: #0a0a0a; color: #fff; font-weight: 600; letter-spacing: .04em; }
+        .terms-page h3 { font-size: 14px; margin: 20px 0 8px; }
+
+        /* footer layout (matches homepage) */
+        .footer-grid { display: grid; grid-template-columns: 1.6fr repeat(4, 1fr); gap: 40px; }
+        .footer-legal {
+            display: flex; flex-wrap: wrap; gap: 8px 24px;
+            padding: 24px 0 8px; margin-top: 28px;
+            border-top: 1px solid rgba(128,128,128,.3);
+            font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+        }
+        .footer-legal a { color: inherit; opacity: .75; text-decoration: none; }
+        .footer-legal a:hover { opacity: 1; text-decoration: underline; }
+        @media (max-width: 900px) {
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .footer-brand { grid-column: 1 / -1; }
+        }
+        @media (max-width: 520px) { .footer-grid { grid-template-columns: 1fr; } }
+
+        [hidden] { display: none !important; }
+        .ct-page { max-width: 1000px; margin: 0 auto; padding: 36px 20px 80px; min-height: 60vh; }
+        .ct-title {
+            font-family: 'Bebas Neue', sans-serif; font-size: 34px; letter-spacing: .06em;
+            margin: 0 0 24px; padding-bottom: 14px; border-bottom: 1px solid #e0ddd8;
+        }
+        .ct-warn {
+            background: #fff8e6; border: 1px solid #f0dca0; color: #6b5200;
+            padding: 12px 14px; font-size: 13px; line-height: 1.6; margin-bottom: 18px;
+        }
+        .ct-warn button, .ct-link-btn {
+            background: none; border: 0; padding: 0; margin-left: 6px; cursor: pointer;
+            font: 700 12px 'DM Sans', sans-serif; text-decoration: underline; color: #0a0a0a;
+        }
+        .ct-empty { text-align: center; padding: 70px 0; }
+        .ct-empty p { font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 22px; }
+        .ct-layout { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+        .ct-items { background: #fff; border: 1px solid #e0ddd8; }
+        .ct-item { display: flex; gap: 16px; padding: 18px; border-bottom: 1px solid #efede9; align-items: flex-start; }
+        .ct-item:last-child { border-bottom: 0; }
+        .ct-thumb { position: relative; flex: 0 0 72px; width: 72px; height: 90px; background: #eceae6; border: 1px solid #e0ddd8; }
+        .ct-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+        .ct-sku { position: absolute; inset: 0; display: grid; place-items: center; font-family: 'DM Mono', monospace; font-size: 12px; color: #888; }
+        .ct-info { flex: 1; min-width: 0; }
+        .ct-name { font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; line-height: 1.4; margin-bottom: 4px; }
+        .ct-meta { font-size: 11px; color: #888; text-transform: uppercase; margin-bottom: 12px; }
+        .ct-qty { display: inline-flex; align-items: center; border: 1px solid #e0ddd8; }
+        .ct-qty button { width: 32px; height: 32px; background: #fff; border: 0; font-size: 16px; cursor: pointer; }
+        .ct-qty button:hover:not(:disabled) { background: #0a0a0a; color: #fff; }
+        .ct-qty button:disabled { opacity: .35; cursor: not-allowed; }
+        .ct-qty span { min-width: 34px; text-align: center; font: 600 13px 'DM Mono', monospace; }
+        .ct-remove { margin-left: 14px; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; background: none; border: 0; color: #888; cursor: pointer; text-decoration: underline; }
+        .ct-remove:hover { color: #0a0a0a; }
+        .ct-price { font-family: 'DM Mono', monospace; font-weight: 700; font-size: 14px; white-space: nowrap; }
+        .ct-unit { display: block; font-weight: 400; font-size: 11px; color: #888; text-align: right; margin-top: 2px; }
+        .ct-summary { background: #fff; border: 1px solid #e0ddd8; padding: 22px; position: sticky; top: 130px; }
+        .ct-sum-title { font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: #888; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #e0ddd8; }
+        .ct-row { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; padding: 5px 0; }
+        .ct-row span:first-child { color: #666; }
+        .ct-row span:last-child { font-family: 'DM Mono', monospace; text-align: right; }
+        .ct-row.total { font-size: 15px; font-weight: 700; border-top: 1px solid #0a0a0a; margin-top: 10px; padding-top: 12px; }
+        .ct-row.total span:first-child { color: #0a0a0a; }
+        .ct-note { font-size: 12px; color: #666; line-height: 1.6; margin: 12px 0 18px; }
+        .ct-btn {
+            display: block; width: 100%; box-sizing: border-box; text-align: center; background: #0a0a0a; color: #fff;
+            border: 1px solid #0a0a0a; padding: 16px; font: 700 12px 'DM Sans', sans-serif; letter-spacing: .16em;
+            text-transform: uppercase; text-decoration: none; cursor: pointer; transition: all .2s;
+        }
+        .ct-btn:hover { background: #fff; color: #0a0a0a; }
+        .ct-btn[aria-disabled="true"] { opacity: .45; pointer-events: none; }
+        .ct-continue { display: block; text-align: center; margin-top: 14px; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #0a0a0a; text-decoration: underline; }
+        .ct-trust { margin-top: 16px; padding-top: 14px; border-top: 1px solid #efede9; font-size: 11px; color: #777; line-height: 1.7; }
+        @media (max-width: 860px) {
+            .ct-layout { grid-template-columns: 1fr; }
+            .ct-summary { position: static; }
+        }
+        @media (max-width: 520px) {
+            .ct-item { flex-wrap: wrap; }
+            .ct-price { margin-left: 88px; }
+        }
+    </style>
+    <link rel="stylesheet" href="css/storefront.css">
+</head>
+<body>
+
+<div class="announcement-bar">
+    <div class="marquee-track">
+        <p>🔔 NEW EVENTS COMING SOON &nbsp;|&nbsp; WEBSITE OPEN 24HRS &nbsp;|&nbsp; 🔔 NEW EVENTS COMING SOON &nbsp;|&nbsp; WEBSITE OPEN 24HRS &nbsp;|&nbsp;</p>
+        <p aria-hidden="true">🔔 NEW EVENTS COMING SOON &nbsp;|&nbsp; WEBSITE OPEN 24HRS &nbsp;|&nbsp; 🔔 NEW EVENTS COMING SOON &nbsp;|&nbsp; WEBSITE OPEN 24HRS &nbsp;|&nbsp;</p>
+    </div>
+</div>
+
+<nav>
+    <div class="logo">
+        <a href="index.html"><img src="logo.png" alt="DISCRETE"></a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="new-arrivals.html">NEW ARRIVALS</a></li>
+        <li><a href="t-shirts.html">T-SHIRTS</a></li>
+        <li><a href="accessories.html">ACCESSORIES</a></li>
+    </ul>
+    <div class="nav-meta">
+        <a href="cart.html" aria-current="page" title="Shopping Cart" class="cart-icon-wrapper">
+            <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.116 60.116 0 0 0-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/></svg>
+            <span id="cart-count" class="cart-badge"></span>
+        </a>
+    </div>
+</nav>
+
+<div class="ct-page">
+    <h1 class="ct-title">Your Cart</h1>
+    <div id="ctWarn" class="ct-warn" role="alert" hidden></div>
+
+    <div id="ctEmpty" class="ct-empty" hidden>
+        <p>Your cart is empty.</p>
+        <a href="index.html" class="ct-btn" style="display:inline-block;width:auto;padding:14px 28px;">Continue Shopping</a>
+    </div>
+
+    <div id="ctMain" class="ct-layout" hidden>
+        <div class="ct-items" id="ctItems" aria-live="polite"></div>
+
+        <aside class="ct-summary" aria-label="Cart summary">
+            <div class="ct-sum-title">Order Summary</div>
+            <div class="ct-row"><span>Subtotal</span><span id="ctSub">R0.00</span></div>
+            <div class="ct-row"><span>Delivery (PEP PAXI)</span><span id="ctShip">Calculated at checkout</span></div>
+            <div class="ct-row total"><span id="ctTotalLabel">Subtotal</span><span id="ctTotal">R0.00</span></div>
+            <p class="ct-note" id="ctNote">Delivery is worked out at checkout from what is in your cart. There is no free shipping.</p>
+            <a href="checkout.html" class="ct-btn" id="ctGo">Checkout</a>
+            <a href="index.html" class="ct-continue">← Continue shopping</a>
+            <div class="ct-trust">
+                Secure payment through PayFast. Delivered by PEP PAXI to the store you choose.
+                7-day returns and size exchanges. <a href="refund-policy.html" style="color:#0a0a0a;font-weight:600;text-decoration:underline;">Returns policy</a>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<a href="https://wa.me/27699478580?text=Hi%20DISCRETE%20Studio%2C%20I'm%20inquiring%20about%20an%20item..."
+   class="whatsapp-float"
+   target="_blank"
+   rel="noopener noreferrer"
+   aria-label="Chat with DISCRETE on WhatsApp">
+    <svg viewBox="0 0 24 24" class="whatsapp-icon">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.455 5.703 1.456h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+</a>
+
+<button type="button" id="backToTop" class="back-to-top" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" class="arrow-icon">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+    </svg>
+</button>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <h4>DISCRETE</h4>
+            <p>The art of being seen without being loud. Premium streetwear tailored for the modern youth.</p>
+        </div>
+        <div class="footer-links">
+            <h5>Collections</h5>
+            <ul>
+                <li><a href="new-arrivals.html">New Arrivals</a></li>
+                <li><a href="t-shirts.html">T-Shirts</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h5>Assistance</h5>
+            <ul>
+                <li><a href="faq.html">FAQ</a></li>
+                <li><a href="track-order.html">Track Order</a></li>
+                <li><a href="shipping.html">Shipping Details</a></li>
+                <li><a href="refund-policy.html">Returns &amp; Exchanges</a></li>
+                <li><a href="sizing-guide.html">Sizing Guide</a></li>
+                <li><a href="mailto:discreteclothing24@gmail.com">Contact Us</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h5>Company</h5>
+            <ul>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="index.html#stores">Studio &amp; Events</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h5>Community</h5>
+            <ul>
+                <li><a href="https://www.instagram.com/discrete_clothin?igsh=MXcyNnM3amw1ZTVlOA==" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-legal">
+        <a href="terms.html">Terms &amp; Conditions</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="refund-policy.html">Refund &amp; Cancellation Policy</a>
+        <a href="index.html#cookies" data-cookie-settings>Cookie Settings</a>
+    </div>
+    <div class="footer-bottom">
+        <div>© 2026 DISCRETE STUDIO. All Rights Reserved.</div>
+        <div>Designed for the Loud Minority, Built by the Silent Majority.</div>
+    </div>
+</footer>
+
+<script src="js/scripts.js"></script>
+    <script src="js/storefront.js"></script>
+<script>
+(function () {
+    'use strict';
+
+    const MAX_LINES = 60;   // the server rejects carts with more than 60 lines
+
+    // Thumbnail fallbacks by product code + colour.
+    const THUMBS = {
+        D01: { _: 'images/d01-black-front.webp', black: 'images/d01-black-front.webp', white: 'images/d01-white-front.webp' },
+        D02: { _: 'images/d02-front.webp' },
+        D05: { _: 'images/d05-front.webp' },
+        D08: { _: 'images/d08.jpg' },
+        D10: { _: 'images/discrete-knitted-beanie.webp' },
+        D11: { _: 'images/dsc-beanie-black.webp' },
+        D13: { _: 'images/discrete-halo-tee-front.webp' },
+        D19: { _: 'images/d19-front.webp' },
+        D18: { _: 'images/d18-front.webp' },
+        D14: { _: 'images/d14-blue-front.webp', blue: 'images/d14-blue-front.webp', red: 'images/d14-red-front.webp' },
+        D15: { _: 'images/d15-front.webp' },
+        D16: { _: 'images/d16-front.webp', white: 'images/d16-front.webp', black: 'images/d16-black-front.webp' },
+        D17: { _: 'images/d17-red-front.webp', red: 'images/d17-red-front.webp', green: 'images/d17-green-front.webp', black: 'images/d17-black-front.webp' }
+    };
+
+    const h = (typeof esc === 'function') ? esc : function (s) {
+        return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    };
+    const $ = id => document.getElementById(id);
+    const money = n => 'R' + Number(n).toFixed(2);
+
+    let cart = [];
+    try { const c = JSON.parse(localStorage.getItem('discreteCart')); cart = Array.isArray(c) ? c : []; } catch (e) { cart = []; }
+
+    let quote = null;                 // server answer from /api/quote
+    let quoteState = 'idle';          // idle | loading | ok | error | invalid
+    let seq = 0;                      // ignore out-of-date quote responses
+    let current = [];                 // the groups currently on screen
+
+    const keyOf = i => `${i.name}|${i.size}|${i.color || ''}`;
+    function save() {
+        try { localStorage.setItem('discreteCart', JSON.stringify(cart)); } catch (e) { /* storage blocked */ }
+        if (typeof updateCartCount === 'function') updateCartCount();
+    }
+    function groups() {
+        const m = new Map();
+        cart.forEach(it => {
+            const k = keyOf(it);
+            if (!m.has(k)) m.set(k, { key: k, item: it, qty: 0 });
+            m.get(k).qty++;
+        });
+        return [...m.values()];
+    }
+    function thumbFor(item) {
+        const own = item.image || item.img || item.thumbnail;
+        if (typeof own === 'string' && /^[\w\-\/\.]+$/.test(own)) return own;
+        const m = String(item.name || '').match(/^(D\d+)/i);
+        const set = m ? THUMBS[m[1].toUpperCase()] : null;
+        return set ? (set[String(item.color || '').toLowerCase()] || set._ || '') : '';
+    }
+
+    // ── Cart lines ──
+    function renderItems() {
+        current = groups();
+        const atLimit = cart.length >= MAX_LINES;
+        $('ctItems').innerHTML = current.map((g, i) => {
+            const it = g.item, unit = parseFloat(it.price) || 0;
+            const color = it.color ? ' · ' + h(it.color.charAt(0).toUpperCase() + it.color.slice(1)) : '';
+            const src = thumbFor(it);
+            const sku = String(it.name || '').match(/^(D\d+)/i);
+            const img = src ? `<img src="${h(src)}" alt="" loading="lazy">` : (sku ? `<span class="ct-sku">${h(sku[1].toUpperCase())}</span>` : '');
+            return `<div class="ct-item">
+                <div class="ct-thumb">${img}</div>
+                <div class="ct-info">
+                    <div class="ct-name">${h(it.name)}</div>
+                    <div class="ct-meta">Size: ${h(it.size)}${color}</div>
+                    <div>
+                        <span class="ct-qty">
+                            <button type="button" data-act="minus" data-g="${i}" aria-label="One less">−</button>
+                            <span aria-live="polite">${g.qty}</span>
+                            <button type="button" data-act="plus" data-g="${i}" aria-label="One more"${atLimit ? ' disabled' : ''}>+</button>
+                        </span>
+                        <button type="button" class="ct-remove" data-act="remove" data-g="${i}">Remove</button>
+                    </div>
+                </div>
+                <div class="ct-price">${money(unit * g.qty)}${g.qty > 1 ? `<span class="ct-unit">${money(unit)} each</span>` : ''}</div>
+            </div>`;
+        }).join('');
+        $('ctItems').querySelectorAll('.ct-thumb img').forEach(im => im.addEventListener('error', () => im.remove()));
+    }
+
+    // ── Summary (subtotal comes from the SERVER when available) ──
+    function clientSubtotal() { return cart.reduce((s, i) => s + (parseFloat(i.price) || 0), 0); }
+
+    function renderSummary() {
+        const sub = clientSubtotal();
+        const ok = quoteState === 'ok' && quote;
+        const mismatch = ok && Math.abs(quote.merchandise - sub) > 0.009;
+        const std = ok && quote.options.find(o => o.id === 'standard');
+        const exp = ok && quote.options.find(o => o.id === 'express');
+
+        $('ctSub').textContent = money(ok ? quote.merchandise : sub);
+        if (ok && std) {
+            $('ctShip').textContent = 'from ' + money(Math.min(...quote.options.map(o => o.fee)));
+            $('ctTotalLabel').textContent = 'Total from';
+            $('ctTotal').textContent = money(Math.min(...quote.options.map(o => o.total)));
+            $('ctNote').textContent = 'Delivery: ' + std.label + ' ' + money(std.fee) + ' (' + std.eta + ')' +
+                (exp ? ' or ' + exp.label + ' ' + money(exp.fee) + ' (' + exp.eta + ')' : '') +
+                '. You choose at checkout. There is no free shipping.';
+        } else {
+            $('ctShip').textContent = 'Calculated at checkout';
+            $('ctTotalLabel').textContent = 'Subtotal';
+            $('ctTotal').textContent = money(sub);
+            $('ctNote').textContent = 'Delivery is worked out at checkout from what is in your cart. There is no free shipping.';
+        }
+
+        // Warnings
+        const warn = $('ctWarn');
+        warn.textContent = '';
+        let msg = '';
+        if (quoteState === 'invalid') msg = "We couldn't price one of the items in your cart.";
+        else if (mismatch) msg = 'Some prices in your cart are out of date.';
+        if (msg) {
+            warn.appendChild(document.createTextNode(msg + ' '));
+            const b = document.createElement('button');
+            b.type = 'button'; b.textContent = 'Clear cart and start again';
+            b.addEventListener('click', () => { cart = []; save(); render(); });
+            warn.appendChild(b);
+        }
+        warn.hidden = !msg;
+
+        const go = $('ctGo');
+        const blocked = !cart.length || quoteState === 'invalid' || mismatch;
+        go.setAttribute('aria-disabled', blocked ? 'true' : 'false');
+        go.tabIndex = blocked ? -1 : 0;
+    }
+
+    async function loadQuote() {
+        const my = ++seq;
+        if (!cart.length) { quote = null; quoteState = 'idle'; return; }
+        quoteState = 'loading';
+        try {
+            const res = await fetch('/api/quote', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items: cart })
+            });
+            if (my !== seq) return;
+            if (res.status === 400) { quote = null; quoteState = 'invalid'; }
+            else {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+                if (!data || !Array.isArray(data.options) || !data.options.length) throw new Error('bad quote');
+                quote = data; quoteState = 'ok';
+            }
+        } catch (err) {
+            if (my !== seq) return;
+            console.warn('[DISCRETE] Could not get cart quote:', err);
+            quote = null; quoteState = 'error';
+        }
+        renderSummary();
+    }
+
+    function render() {
+        const empty = cart.length === 0;
+        $('ctEmpty').hidden = !empty;
+        $('ctMain').hidden = empty;
+        if (empty) { $('ctWarn').hidden = true; seq++; return; }
+        renderItems();
+        renderSummary();
+        loadQuote();
+    }
+
+    // ── Quantity / remove (the cart stores one line per unit) ──
+    $('ctItems').addEventListener('click', e => {
+        const btn = e.target.closest('button[data-act]');
+        if (!btn) return;
+        const g = current[Number(btn.getAttribute('data-g'))];
+        if (!g) return;
+        const act = btn.getAttribute('data-act');
+        if (act === 'plus') {
+            if (cart.length >= MAX_LINES) return;
+            cart.push({ ...g.item });
+        } else if (act === 'minus') {
+            for (let i = cart.length - 1; i >= 0; i--) { if (keyOf(cart[i]) === g.key) { cart.splice(i, 1); break; } }
+        } else if (act === 'remove') {
+            cart = cart.filter(i => keyOf(i) !== g.key);
+        }
+        save();
+        render();
+    });
+
+    $('ctGo').addEventListener('click', e => {
+        if ($('ctGo').getAttribute('aria-disabled') === 'true') e.preventDefault();
+    });
+
+    render();
+})();
+</script>
+</body>
+</html>

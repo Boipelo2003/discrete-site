@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <meta name="theme-color" content="#0a0a0a">
+    <title>Checkout | DISCRETE</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* ── BRAND COLOURS: change these few lines to restyle the whole page ── */
+        :root {
+            --ck-bg:         #0a0a0a;   /* page */
+            --ck-surface:    #141414;   /* inputs + cards */
+            --ck-surface-2:  #1b1b1b;   /* hover / selected card */
+            --ck-line:       #2a2a2a;   /* borders */
+            --ck-text:       #f5f5f5;   /* main text + headings */
+            --ck-muted:      #9b9b9b;   /* hints + small print */
+            --ck-accent:     #ffffff;   /* selected options, links, pay button */
+            --ck-accent-ink: #0a0a0a;   /* text on the accent colour */
+            --ck-error:      #ff6b6b;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { margin: 0; }
+        body {
+            background: var(--ck-bg); color: var(--ck-text);
+            font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased;
+        }
+        a { color: var(--ck-accent); }
+        .vh { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+        [hidden] { display: none !important; }
+
+        /* ── TOP BAR ── */
+        .ck-top {
+            display: flex; justify-content: space-between; align-items: center; gap: 12px;
+            padding: 20px 28px; border-bottom: 1px solid var(--ck-line);
+            font-size: 15px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+        }
+        .ck-top a { color: var(--ck-text); text-decoration: none; }
+        .ck-top a:hover { text-decoration: underline; }
+        .ck-top .ck-secure { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: .1em; font-weight: 400; }
+
+        /* ── LAYOUT ── */
+        .ck-wrap { max-width: 800px; margin: 0 auto; padding: 36px 28px 90px; }
+        .ck-sec { margin-bottom: 40px; }
+        .ck-h {
+            font-family: 'Bebas Neue', sans-serif; font-weight: 400; font-size: 40px; letter-spacing: .03em;
+            line-height: 1; margin: 0 0 20px; color: var(--ck-text); text-transform: uppercase;
+        }
+
+        /* ── FIELDS ── */
+        .ck-field { margin-bottom: 16px; }
+        .ck-input, .ck-select {
+            width: 100%; height: 64px; padding: 0 20px; font: inherit; font-size: 17px;
+            background: var(--ck-surface); color: var(--ck-text);
+            border: 1px solid var(--ck-line); border-radius: 2px; outline: none;
+            -webkit-appearance: none; appearance: none; transition: border-color .15s;
+        }
+        .ck-input::placeholder { color: var(--ck-muted); opacity: .85; }
+        .ck-input:focus, .ck-select:focus { border-color: var(--ck-accent); }
+        .ck-input.err, .ck-select.err { border-color: var(--ck-error); }
+        .ck-select {
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'><path fill='none' stroke='%23f5f5f5' stroke-width='2' d='M1 1l6 6 6-6'/></svg>");
+            background-repeat: no-repeat; background-position: right 20px center; padding-right: 48px;
+        }
+        .ck-select:invalid { color: var(--ck-muted); }
+        .ck-select option { color: #f5f5f5; background: #141414; }
+        .ck-err { display: block; margin-top: 6px; font-size: 13px; color: var(--ck-error); }
+        .ck-err:empty { display: none; }
+        .ck-hint { font-size: 14px; color: var(--ck-muted); margin: 4px 0 0; line-height: 1.6; }
+        .ck-hint a { color: var(--ck-accent); }
+        .ck-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .ck-grid-2 .ck-field { margin-bottom: 16px; }
+
+        .ck-btn-outline {
+            display: inline-block; height: 56px; padding: 0 28px; margin: 0 0 6px; cursor: pointer;
+            background: transparent; color: var(--ck-accent); border: 2px solid var(--ck-accent); border-radius: 2px;
+            font: 700 15px 'DM Sans', sans-serif; letter-spacing: .12em; text-transform: uppercase;
+        }
+        .ck-btn-outline:hover { background: var(--ck-accent); color: var(--ck-accent-ink); }
+
+        /* ── OPTION CARDS (delivery, payment) ── */
+        .ck-opt {
+            display: flex; align-items: flex-start; gap: 16px; width: 100%; padding: 22px 24px; margin-bottom: 14px; cursor: pointer;
+            background: var(--ck-surface); border: 1px solid var(--ck-line); border-radius: 2px; transition: border-color .15s, background .15s;
+        }
+        .ck-opt:hover { background: var(--ck-surface-2); }
+        .ck-opt.sel { border-color: var(--ck-accent); background: var(--ck-surface-2); }
+        .ck-opt input { width: 20px; height: 20px; margin: 4px 0 0; accent-color: var(--ck-accent); flex: none; }
+        .ck-opt-main { flex: 1; min-width: 0; }
+        .ck-opt-main strong { display: block; font-size: 20px; font-weight: 700; line-height: 1.3; }
+        .ck-opt-main span { display: block; font-size: 15px; color: var(--ck-muted); margin-top: 2px; }
+        .ck-opt-fee { font-size: 20px; font-weight: 700; white-space: nowrap; }
+        .ck-note { font-size: 15px; color: var(--ck-muted); padding: 10px 0 16px; }
+        .ck-retry { margin-left: 8px; background: none; border: 0; padding: 0; color: var(--ck-accent); font: inherit; font-weight: 700; text-decoration: underline; cursor: pointer; }
+        .ck-subtitle { font-size: 15px; color: var(--ck-muted); margin: 26px 0 14px; }
+
+        /* ── TERMS ── */
+        .ck-terms { display: flex; gap: 14px; align-items: flex-start; margin: 20px 0 0; font-size: 17px; }
+        .ck-terms input { width: 22px; height: 22px; margin-top: 3px; accent-color: var(--ck-accent); flex: none; cursor: pointer; }
+        .ck-terms label { cursor: pointer; }
+        .ck-terms.err { outline: 1px solid var(--ck-error); outline-offset: 8px; }
+
+        /* ── ORDER SUMMARY ── */
+        .ck-summary { background: var(--ck-surface); border: 1px solid var(--ck-line); padding: 32px; }
+        .ck-summary .ck-h { margin-bottom: 18px; }
+        .ck-line-item { display: flex; align-items: center; gap: 18px; padding: 14px 0; }
+        .ck-thumb { flex: 0 0 66px; width: 66px; height: 66px; background: #000; position: relative; overflow: hidden; }
+        .ck-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+        .ck-thumb .ck-sku { position: absolute; inset: 0; display: grid; place-items: center; font: 500 12px 'DM Mono', monospace; color: var(--ck-muted); }
+        .ck-li-main { flex: 1; min-width: 0; }
+        .ck-li-name { font-size: 18px; }
+        .ck-li-var { font-size: 14px; color: var(--ck-muted); }
+        .ck-li-price { font-weight: 700; font-size: 18px; white-space: nowrap; }
+        .ck-empty { padding: 20px 0; color: var(--ck-muted); }
+        .ck-totals { border-top: 1px solid var(--ck-line); margin-top: 8px; padding-top: 16px; }
+        .ck-row { display: flex; justify-content: space-between; gap: 14px; padding: 5px 0; font-size: 18px; }
+        .ck-row.total { font-family: 'Bebas Neue', sans-serif; font-size: 34px; letter-spacing: .06em; padding-top: 14px; }
+        .ck-vat { text-align: center; font-size: 15px; color: var(--ck-muted); margin: 8px 0 22px; }
+        .ck-bag { font-size: 14px; color: var(--ck-muted); padding: 0 0 4px; }
+
+        .ck-pay {
+            display: block; width: 100%; height: 68px; cursor: pointer; margin-top: 8px;
+            background: var(--ck-accent); color: var(--ck-accent-ink); border: 0; border-radius: 2px;
+            font: 700 18px 'DM Sans', sans-serif; letter-spacing: .22em; text-transform: uppercase; transition: opacity .15s;
+        }
+        .ck-pay:hover:not(:disabled) { opacity: .88; }
+        .ck-pay:disabled { opacity: .35; cursor: not-allowed; }
+
+        /* ── MESSAGES ── */
+        .ck-alert { padding: 14px 18px; margin-bottom: 22px; font-size: 15px; line-height: 1.6; border: 1px solid; border-radius: 2px; }
+        .ck-alert.error { color: var(--ck-error); border-color: var(--ck-error); background: rgba(255,107,107,.08); }
+        .ck-alert.warn  { color: #f2d27a; border-color: #6b5a22; background: rgba(242,210,122,.07); }
+        .ck-alert a { color: inherit; font-weight: 700; }
+
+        /* ── FOOTER + WHATSAPP ── */
+        .ck-foot { max-width: 800px; margin: 0 auto; padding: 0 28px 70px; text-align: center; font-size: 13px; color: var(--ck-muted); }
+        .ck-foot .ck-legal { display: flex; flex-wrap: wrap; gap: 8px 22px; justify-content: center; margin-bottom: 12px; text-transform: uppercase; letter-spacing: .1em; }
+        .ck-foot a { color: var(--ck-muted); }
+        .ck-wa {
+            position: fixed; right: 20px; bottom: 20px; width: 60px; height: 60px; border-radius: 50%; background: #25D366;
+            display: grid; place-items: center; box-shadow: 0 6px 20px rgba(0,0,0,.5); z-index: 50;
+        }
+        .ck-wa svg { width: 32px; height: 32px; fill: #fff; }
+
+        @media (max-width: 640px) {
+            .ck-top { padding: 16px 18px; font-size: 13px; }
+            .ck-top .ck-secure { font-size: 22px; }
+            .ck-wrap { padding: 26px 18px 90px; }
+            .ck-h { font-size: 34px; }
+            .ck-input, .ck-select { height: 60px; font-size: 16px; padding: 0 16px; }
+            .ck-grid-2 { grid-template-columns: 1fr; gap: 0; }
+            .ck-opt { padding: 18px; }
+            .ck-opt-main strong, .ck-opt-fee { font-size: 18px; }
+            .ck-summary { padding: 22px 18px; }
+            .ck-terms { font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="ck-top">
+    <a href="index.html">← Continue shopping</a>
+    <span class="ck-secure">Secure checkout</span>
+</header>
+
+<main class="ck-wrap">
+    <div id="emptyBanner" class="ck-alert warn" hidden>Your cart is empty. <a href="index.html">Continue shopping</a> to add something first.</div>
+    <div id="cartWarn" class="ck-alert warn" hidden></div>
+    <div id="errBox" class="ck-alert error" role="alert" hidden></div>
+
+    <form id="ckForm" novalidate>
+
+        <!-- 1. CONTACT -->
+        <section class="ck-sec" aria-labelledby="h1">
+            <h2 class="ck-h" id="h1">1. Contact</h2>
+            <div class="ck-field">
+                <label class="vh" for="fullName">Full name and surname</label>
+                <input class="ck-input" id="fullName" placeholder="Full name and surname (must match the ID of the person collecting)" autocomplete="name" aria-describedby="e-fullName">
+                <span class="ck-err" id="e-fullName"></span>
+            </div>
+            <div class="ck-field">
+                <label class="vh" for="email">Email address</label>
+                <input class="ck-input" id="email" type="email" inputmode="email" placeholder="Email address (invoice and tracking)" autocomplete="email" aria-describedby="e-email">
+                <span class="ck-err" id="e-email"></span>
+            </div>
+            <div class="ck-field">
+                <label class="vh" for="phone">South African mobile number</label>
+                <input class="ck-input" id="phone" type="tel" inputmode="tel" placeholder="South African mobile number, e.g. 082 123 4567" autocomplete="tel" aria-describedby="e-phone">
+                <span class="ck-err" id="e-phone"></span>
+            </div>
+            <div class="ck-field">
+                <label class="vh" for="phone2">Confirm mobile number</label>
+                <input class="ck-input" id="phone2" type="tel" inputmode="tel" placeholder="Confirm mobile number" autocomplete="off" aria-describedby="e-phone2">
+                <span class="ck-err" id="e-phone2"></span>
+            </div>
+            <div class="ck-field">
+                <label class="vh" for="altPhone">Alternative contact number (optional)</label>
+                <input class="ck-input" id="altPhone" type="tel" inputmode="tel" placeholder="Alternative contact number (optional)" autocomplete="off" aria-describedby="e-altPhone">
+                <span class="ck-err" id="e-altPhone"></span>
+                <p class="ck-hint">Please double-check your mobile number. PAXI sends your collection PIN to it by SMS.</p>
+            </div>
+        </section>
+
+        <!-- 2. DELIVERY -->
+        <section class="ck-sec" aria-labelledby="h2">
+            <h2 class="ck-h" id="h2">2. Delivery</h2>
+            <div id="deliveryOptions" role="radiogroup" aria-label="Delivery method"><div class="ck-note">Calculating delivery…</div></div>
+
+            <p class="ck-subtitle">Choose the PEP store you will collect from. Bring your ID. PAXI texts you a collection PIN when your parcel arrives.</p>
+            <div class="ck-grid-2">
+                <div class="ck-field">
+                    <label class="vh" for="province">Province</label>
+                    <select class="ck-select" id="province" required autocomplete="off" aria-describedby="e-province">
+                        <option value="" disabled selected>Province</option>
+                        <option>Gauteng</option><option>Western Cape</option><option>KwaZulu-Natal</option>
+                        <option>Eastern Cape</option><option>Limpopo</option><option>Mpumalanga</option>
+                        <option>North West</option><option>Free State</option><option>Northern Cape</option>
+                    </select>
+                    <span class="ck-err" id="e-province"></span>
+                </div>
+                <div class="ck-field">
+                    <label class="vh" for="town">Town or suburb</label>
+                    <input class="ck-input" id="town" placeholder="Town or suburb" autocomplete="off" aria-describedby="e-town">
+                    <span class="ck-err" id="e-town"></span>
+                </div>
+            </div>
+            <button type="button" class="ck-btn-outline" id="mapBtn">Show PEP stores in this area</button>
+            <span class="ck-err" id="e-map" style="margin-bottom:14px"></span>
+
+            <div class="ck-field" style="margin-top:14px">
+                <label class="vh" for="storeName">PEP store name and location</label>
+                <input class="ck-input" id="storeName" placeholder="PEP store name and location (e.g. PEP Mall of Africa, Midrand)" autocomplete="off" aria-describedby="e-storeName">
+                <span class="ck-err" id="e-storeName"></span>
+            </div>
+        </section>
+
+        <!-- 3. PAYMENT -->
+        <section class="ck-sec" aria-labelledby="h3">
+            <h2 class="ck-h" id="h3">3. Payment</h2>
+            <label class="ck-opt sel">
+                <input type="radio" name="pay" value="paystack" checked>
+                <span class="ck-opt-main"><strong>Paystack</strong><span>Pay securely on Paystack’s payment page with the options it offers.</span></span>
+            </label>
+            <p class="ck-hint" style="margin-bottom:6px">You’ll be taken to a secure payment page to finish paying.</p>
+            <div class="ck-terms" id="termsBox">
+                <input type="checkbox" id="termsCheck">
+                <label for="termsCheck">I agree to the <a href="terms.html" target="_blank" rel="noopener noreferrer">terms &amp; conditions</a>, the <a href="refund-policy.html" target="_blank" rel="noopener noreferrer">refund &amp; cancellation policy</a> and the <a href="privacy.html" target="_blank" rel="noopener noreferrer">privacy policy</a>.</label>
+            </div>
+        </section>
+
+        <!-- ORDER SUMMARY -->
+        <section class="ck-summary" aria-labelledby="h4">
+            <h2 class="ck-h" id="h4">Order summary</h2>
+            <div id="oiList"></div>
+            <div class="ck-totals">
+                <div class="ck-row"><span>Subtotal</span><span id="subDisp">R 0.00</span></div>
+                <div class="ck-row"><span id="shipLabel">Shipping</span><span id="shipDisp">R 0.00</span></div>
+                <div class="ck-bag" id="bagNote" hidden></div>
+                <div class="ck-row total"><span>Total</span><span id="grandDisp">R 0.00</span></div>
+                <div class="ck-vat" id="vatRow" hidden>Includes <span id="vatDisp">R 0.00</span> VAT (15%)</div>
+            </div>
+            <button type="submit" class="ck-pay" id="payBtn">Pay with Paystack</button>
+        </section>
+    </form>
+</main>
+
+<footer class="ck-foot">
+    <div class="ck-legal" role="navigation" aria-label="Legal">
+        <a href="terms.html">Terms &amp; Conditions</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="refund-policy.html">Refund &amp; Cancellation Policy</a>
+        <a href="shipping.html">Shipping Details</a>
+    </div>
+    <div>© 2026 DISCRETE STUDIO. All Rights Reserved.</div>
+</footer>
+
+<a class="ck-wa" href="https://wa.me/27699478580?text=Hi%20DISCRETE%20Studio%2C%20I%20need%20help%20with%20my%20order." target="_blank" rel="noopener noreferrer" aria-label="Chat with DISCRETE on WhatsApp">
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.455 5.703 1.456h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+// ── CHECKOUT LOGIC ──
+(function () {
+    'use strict';
+
+    // The SERVER (api/quote.js + api/paystack-init.js, using lib/products.js) decides prices and
+    // delivery fees. This page only displays what the server says, and refuses to continue if
+    // the total the server charges ever differs from the total shown here.
+
+    // Only show a VAT line if DISCRETE is VAT-registered. Turn this on together with
+    // BUSINESS.vatNumber in success.html so the checkout and the invoice always agree.
+    const SHOW_VAT = false;
+    const VAT_RATE = 0.15;
+
+    const THUMBS = {
+        D01: { _: 'images/d01-black-front.webp', black: 'images/d01-black-front.webp', white: 'images/d01-white-front.webp' },
+        D02: { _: 'images/d02-front.webp' },
+        D05: { _: 'images/d05-front.webp' },
+        D08: { _: 'images/d08.jpg' },
+        D10: { _: 'images/discrete-knitted-beanie.webp' },
+        D11: { _: 'images/dsc-beanie-black.webp' },
+        D13: { _: 'images/discrete-halo-tee-front.webp' },
+        D19: { _: 'images/d19-front.webp' },
+        D18: { _: 'images/d18-front.webp' },
+        D14: { _: 'images/d14-blue-front.webp', blue: 'images/d14-blue-front.webp', red: 'images/d14-red-front.webp' },
+        D15: { _: 'images/d15-front.webp' },
+        D16: { _: 'images/d16-front.webp', white: 'images/d16-front.webp', black: 'images/d16-black-front.webp' },
+        D17: { _: 'images/d17-red-front.webp', red: 'images/d17-red-front.webp', green: 'images/d17-green-front.webp', black: 'images/d17-black-front.webp' }
+    };
+
+    const $ = id => document.getElementById(id);
+    const h = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const money = n => 'R' + Number(n).toFixed(2);
+    const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
+
+    const cart = (() => {
+        try { const c = JSON.parse(localStorage.getItem('discreteCart')); return Array.isArray(c) ? c : []; }
+        catch (e) { return []; }
+    })();
+    let groupedCart = {};
+    let grandTotal = 0;
+    let clientSub = 0;
+
+    let quote = null;                 // { merchandise, bag, options:[{id,label,eta,fee,total}] }
+    let quoteState = 'idle';          // idle | loading | ok | error | invalid
+    let selectedDelivery = 'standard';
+    let priceMismatch = false;
+
+    const form = $('ckForm'), errBox = $('errBox'), payBtn = $('payBtn');
+    const selectedOption = () => (quote && quote.options.find(o => o.id === selectedDelivery)) || null;
+    const bagText = () => {
+        if (!quote) return '';
+        const n = quote.bag.count;
+        return (n > 1 ? n + ' × ' : '') + (quote.bag.size === 'large' ? 'Large' : 'Standard') + (n > 1 ? ' bags' : ' bag');
+    };
+
+    // ── Validation ──
+    const v = id => { const el = $(id); return el ? el.value.trim() : ''; };
+    const natPhone = x => { const d = String(x).replace(/\D/g, ''); return /^27\d{9}$/.test(d) ? '0' + d.slice(2) : d; };
+    const validPhone = x => /^0\d{9}$/.test(natPhone(x));
+    const RULES = {
+        fullName:  val => /^\S+(\s+\S+)+$/.test(val) || 'Enter your full name and surname, as on the ID of the person collecting.',
+        email:     val => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val) || 'Enter a valid email address, e.g. name@example.com.',
+        phone:     val => validPhone(val) || 'Enter a valid South African mobile number, e.g. 082 123 4567.',
+        phone2:    val => (val !== '' && natPhone(val) === natPhone(v('phone'))) || 'The two mobile numbers do not match.',
+        altPhone:  val => val === '' || validPhone(val) || 'That alternative number is not valid.',
+        province:  val => !!val || 'Choose your province.',
+        town:      val => val.length >= 2 || 'Enter your town or suburb.',
+        storeName: val => val.length >= 3 || 'Enter the PEP store you will collect from.'
+    };
+    const FIELD_ORDER = ['fullName', 'email', 'phone', 'phone2', 'altPhone', 'province', 'town', 'storeName'];
+
+    function setErr(id, msg) {
+        const el = $(id);
+        if (!el) return;
+        el.classList.toggle('err', !!msg);
+        el.setAttribute('aria-invalid', msg ? 'true' : 'false');
+        const s = $('e-' + id);
+        if (s) s.textContent = msg || '';
+    }
+    function checkField(id) {
+        const res = RULES[id](v(id));
+        setErr(id, res === true ? '' : res);
+        return res === true;
+    }
+    function checkAll() {
+        let first = null;
+        FIELD_ORDER.forEach(id => { if (!checkField(id) && !first) first = id; });
+        if (first) {
+            showErr('Please fix the highlighted fields.');
+            $(first).focus();
+            return false;
+        }
+        return true;
+    }
+    function showErr(msg) {
+        errBox.textContent = msg;
+        errBox.hidden = false;
+        setTimeout(() => errBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 40);
+    }
+    function clearErr() { errBox.hidden = true; errBox.textContent = ''; }
+
+    FIELD_ORDER.forEach(id => {
+        const el = $(id);
+        el.addEventListener('blur', () => { if (v(id) !== '' || el.classList.contains('err')) checkField(id); });
+        el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', () => {
+            if (el.classList.contains('err')) checkField(id);
+            if (id === 'phone' && v('phone2') !== '') checkField('phone2');
+            clearErr();
+        });
+    });
+    $('termsCheck').addEventListener('change', () => { $('termsBox').classList.remove('err'); clearErr(); });
+
+    // "Show PEP stores in this area" opens Google Maps (no key needed)
+    $('mapBtn').addEventListener('click', () => {
+        const prov = v('province'), town = v('town');
+        if (!prov || town.length < 2) {
+            $('e-map').textContent = 'Choose your province and enter your town or suburb first.';
+            if (!prov) setErr('province', 'Choose your province.');
+            if (town.length < 2) setErr('town', 'Enter your town or suburb.');
+            return;
+        }
+        $('e-map').textContent = '';
+        window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('PEP stores near ' + town + ', ' + prov + ', South Africa'), '_blank', 'noopener');
+    });
+
+    // ── Cart lines ──
+    function thumbFor(item) {
+        const own = item.image || item.img || item.thumbnail;
+        if (typeof own === 'string' && /^[\w\-\/\.]+$/.test(own)) return own;
+        const m = String(item.name || '').match(/^(D\d+)/i);
+        const set = m ? THUMBS[m[1].toUpperCase()] : null;
+        return set ? (set[String(item.color || '').toLowerCase()] || set._ || '') : '';
+    }
+    function renderItems() {
+        const list = $('oiList');
+        groupedCart = {};
+        cart.forEach(item => {
+            const key = `${item.name}|${item.size}|${item.color || ''}`;
+            if (groupedCart[key]) groupedCart[key].qty++; else groupedCart[key] = { ...item, qty: 1 };
+        });
+        const items = Object.values(groupedCart);
+        clientSub = 0;
+        if (!items.length) {
+            list.innerHTML = '<div class="ck-empty">Your cart is empty.</div>';
+            $('emptyBanner').hidden = false;
+            return;
+        }
+        list.innerHTML = items.map(item => {
+            const line = (parseFloat(item.price) || 0) * item.qty;
+            clientSub += line;
+            const src = thumbFor(item);
+            const sku = String(item.name || '').match(/^(D\d+)/i);
+            const img = src ? `<img src="${h(src)}" alt="" loading="lazy">` : (sku ? `<span class="ck-sku">${h(sku[1].toUpperCase())}</span>` : '');
+            const variant = (item.color ? cap(item.color) + ' / ' : '') + (item.size || '') + ' × ' + item.qty;
+            return `<div class="ck-line-item">
+                <div class="ck-thumb">${img}</div>
+                <div class="ck-li-main"><div class="ck-li-name">${h(item.name)}</div><div class="ck-li-var">${h(variant)}</div></div>
+                <div class="ck-li-price">${money(line)}</div></div>`;
+        }).join('');
+        list.querySelectorAll('.ck-thumb img').forEach(im => im.addEventListener('error', () => im.remove()));
+    }
+
+    // ── Totals (from the server quote) ──
+    function renderTotals() {
+        const opt = selectedOption();
+        const ok = quoteState === 'ok' && opt;
+        $('subDisp').textContent = money(ok ? quote.merchandise : clientSub);
+        if (!cart.length) {
+            $('shipLabel').textContent = 'Shipping'; $('shipDisp').textContent = money(0); $('grandDisp').textContent = money(0);
+            $('bagNote').hidden = true; grandTotal = 0;
+        } else if (ok) {
+            $('shipLabel').textContent = 'Shipping (' + opt.label.replace('PEP ', '') + ')';
+            $('shipDisp').textContent = money(opt.fee);
+            $('grandDisp').textContent = money(opt.total);
+            $('bagNote').textContent = bagText() + ' · ' + opt.eta;
+            $('bagNote').hidden = false;
+            grandTotal = priceMismatch ? 0 : opt.total;
+        } else if (quoteState === 'loading' || quoteState === 'idle') {
+            $('shipLabel').textContent = 'Shipping'; $('shipDisp').textContent = 'Calculating…';
+            $('grandDisp').textContent = money(clientSub); $('bagNote').hidden = true; grandTotal = 0;
+        } else {
+            $('shipLabel').textContent = 'Shipping'; $('shipDisp').textContent = '—';
+            $('grandDisp').textContent = '—'; $('bagNote').hidden = true; grandTotal = 0;
+        }
+        $('vatRow').hidden = !(SHOW_VAT && ok);
+        $('vatDisp').textContent = money(grandTotal * VAT_RATE / (1 + VAT_RATE));
+        payBtn.disabled = !cart.length || !(grandTotal > 0);
+    }
+
+    function renderOptions() {
+        const box = $('deliveryOptions');
+        box.textContent = '';
+        const note = (text, retry) => {
+            const d = document.createElement('div');
+            d.className = 'ck-note'; d.textContent = text;
+            if (retry) {
+                const b = document.createElement('button');
+                b.type = 'button'; b.className = 'ck-retry'; b.textContent = 'Try again';
+                b.addEventListener('click', loadQuote);
+                d.appendChild(b);
+            }
+            box.appendChild(d);
+        };
+        if (!cart.length) return note('Add something to your cart to see delivery options.', false);
+        if (quoteState === 'loading' || quoteState === 'idle') return note('Calculating delivery…', false);
+        if (quoteState === 'invalid') return note("We couldn't price one of the items in your cart.", false);
+        if (quoteState !== 'ok') return note("We couldn't calculate delivery just now.", true);
+
+        quote.options.forEach(o => {
+            const lab = document.createElement('label');
+            lab.className = 'ck-opt' + (o.id === selectedDelivery ? ' sel' : '');
+            const inp = document.createElement('input');
+            inp.type = 'radio'; inp.name = 'delivery'; inp.value = o.id; inp.checked = o.id === selectedDelivery;
+            inp.addEventListener('change', () => { selectedDelivery = o.id; renderOptions(); renderTotals(); });
+            const main = document.createElement('span');
+            main.className = 'ck-opt-main';
+            const s1 = document.createElement('strong'); s1.textContent = o.label.replace('PEP ', '');
+            const s2 = document.createElement('span'); s2.textContent = o.eta.replace('–', ' to ') + '. Collect from your chosen PEP store.';
+            main.appendChild(s1); main.appendChild(s2);
+            const fee = document.createElement('span');
+            fee.className = 'ck-opt-fee'; fee.textContent = money(o.fee);
+            lab.appendChild(inp); lab.appendChild(main); lab.appendChild(fee);
+            box.appendChild(lab);
+        });
+    }
+
+    function checkPrices() {
+        const warn = $('cartWarn');
+        priceMismatch = quoteState === 'ok' && Math.abs(quote.merchandise - clientSub) > 0.009;
+        warn.textContent = '';
+        if (priceMismatch) {
+            warn.appendChild(document.createTextNode('Some prices in your cart are out of date. Please clear your cart and add the items again. '));
+            const a = document.createElement('a'); a.href = 'index.html'; a.textContent = 'Back to the shop';
+            warn.appendChild(a);
+        }
+        warn.hidden = !priceMismatch;
+    }
+
+    function readyToPay(show) {
+        let msg = '';
+        if (quoteState === 'loading') msg = 'Still calculating delivery. One moment…';
+        else if (quoteState === 'invalid') msg = "We couldn't price one of the items in your cart. Message us on WhatsApp and we'll sort it out.";
+        else if (quoteState !== 'ok') msg = "We couldn't calculate delivery just now. Tap \"Try again\" under Delivery.";
+        else if (priceMismatch) msg = 'Some prices in your cart are out of date. Please clear your cart and add the items again.';
+        if (msg && show) showErr(msg);
+        return !msg;
+    }
+
+    // ── Ask the server what this cart costs ──
+    async function loadQuote() {
+        if (!cart.length) { quoteState = 'idle'; return; }
+        quoteState = 'loading';
+        renderOptions(); renderTotals();
+        try {
+            const res = await fetch('/api/quote', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: cart }) });
+            if (res.status === 400) { quote = null; quoteState = 'invalid'; }
+            else {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+                if (!data || !Array.isArray(data.options) || !data.options.length) throw new Error('bad quote');
+                quote = data; quoteState = 'ok';
+                if (!quote.options.some(o => o.id === selectedDelivery)) selectedDelivery = quote.options[0].id;
+            }
+        } catch (err) {
+            console.warn('[DISCRETE] Could not get delivery quote:', err);
+            quote = null; quoteState = 'error';
+        }
+        checkPrices(); renderOptions(); renderTotals();
+    }
+
+    renderItems();
+    renderTotals();
+    renderOptions();
+    loadQuote();
+
+    // ── Pay with Paystack ──
+    let paying = false;
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (paying) return;
+        clearErr();
+        if (!cart.length) { showErr('Your cart is empty. Add items before checking out.'); return; }
+        if (!checkAll()) return;
+        if (!readyToPay(true)) return;
+        const opt = selectedOption();
+        const amount = grandTotal;
+        if (!opt || !(amount > 0)) { showErr('Please choose a delivery method.'); return; }
+        if (!$('termsCheck').checked) {
+            $('termsBox').classList.add('err');
+            showErr('Please agree to the terms, refund policy and privacy policy before paying.');
+            $('termsBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+
+        paying = true;
+        payBtn.disabled = true;
+        payBtn.textContent = 'Preparing payment…';
+        const reset = () => { paying = false; payBtn.textContent = 'Pay with Paystack'; renderTotals(); };
+
+        const storeName = v('storeName');
+        try {
+            const res = await fetch('/api/paystack-init', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    items: cart,
+                    shippingId: opt.id,
+                    customer: { fullName: v('fullName'), email: v('email'), phone: v('phone'), altPhone: v('altPhone') },
+                    collection: { province: v('province'), town: v('town'), storeName }
+                })
+            });
+            let data = {};
+            try { data = await res.json(); } catch (_) { /* no JSON body */ }
+            if (!res.ok) throw new Error(res.status === 400 && data.error ? data.error : 'We could not start the payment. Please try again.');
+
+            // Safety net: the server's total must equal the total the customer saw.
+            if (!data || Math.abs(Number(data.total) - amount) > 0.009) throw new Error('The total changed. Please check your cart and try again.');
+            let host = '';
+            try { const u = new URL(data.authorization_url); host = u.protocol === 'https:' ? u.hostname : ''; } catch (_) { /* invalid URL */ }
+            if (!/(^|\.)paystack\.com$/.test(host)) throw new Error('We could not start the payment. Please try again.');
+
+            // Remember the order so success.html can show the receipt, WhatsApp message and invoice.
+            const [firstName, ...rest] = v('fullName').split(/\s+/);
+            const orderDetails = {
+                orderId: data.orderId,
+                date: new Date().toISOString(),
+                customer: { firstName, lastName: rest.join(' '), email: v('email'), phone: v('phone') },
+                shipping: { address: `PEP PAXI collection point: ${storeName}`, city: v('town'), province: v('province'), postalCode: '' },
+                items: Object.values(groupedCart).map(i => ({ name: i.name, size: i.size, color: i.color || '', qty: i.qty, price: parseFloat(i.price) })),
+                shippingCost: opt.fee, shippingMethod: opt.id, shippingLabel: opt.label, shippingEta: opt.eta,
+                total: amount
+            };
+            try {
+                localStorage.setItem('discrete_last_order', JSON.stringify(orderDetails));
+                localStorage.setItem('discrete_cart_total', String(amount));
+            } catch (_) { /* storage blocked: the success page still works from the server status */ }
+
+            payBtn.textContent = 'Redirecting to Paystack…';
+            window.location.href = data.authorization_url;
+        } catch (err) {
+            console.error('[DISCRETE] Checkout error:', err);
+            showErr(err && err.message && err.message.indexOf('Failed to fetch') === -1 ? err.message : 'Something went wrong. Please try again.');
+            reset();
+        }
+    });
+})();
+</script>
+</body>
+</html>
