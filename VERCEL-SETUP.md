@@ -114,3 +114,6 @@ The success page appears after Paystack sends the customer back. Check these in 
 - Turn on 2FA in Paystack (the pink banner at the top of the dashboard).
 - Never share the full secret key. If it ever leaks, use the pencil icon next to it in Paystack to replace it, then update Vercel.
 - Prices are checked on the server from `lib/products.js`. When you change a price on a page, change it in that file too.
+
+## Limited-edition stock (lib/stock.js)
+Some products can have a real stock limit (for example D15, 3 pieces). It is enforced on the server, so nobody can buy more than what is left. To change it, edit `STOCK` in `lib/stock.js`: set `remaining` to how many you have now and `asOf` to today's date and time. Sales after `asOf` are subtracted automatically from Paystack. To add another limited product, add a line such as `D14: { remaining: 10, asOf: '2026-12-01T00:00:00+02:00' }`. The shop pages show "only N left" or "Sold out" automatically for D15; for a new product, give its "Limited" label a `data-stock-sku="D14"` attribute. If an order is ever paid that goes over the limit, you get an "OVERSOLD" email (needs Resend set up).

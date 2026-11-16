@@ -4,6 +4,7 @@
 // 3. Emails the owner (and the customer) via Resend, if RESEND_API_KEY is set.
 // The order itself is the Paystack transaction, so there is nothing to save here.
 import crypto from 'node:crypto';
+import { STOCK, skuOf, stockStatus } from '../lib/stock.js';
 
 async function rawBody(req) {
     if (typeof req.body === 'string') return req.body;
@@ -66,6 +67,16 @@ export default async function handler(req, res) {
             return res.status(200).json({ received: true });
         }
         console.log('[paid]', ref, rand(paid));
+
+        // Safety net: if a limited item is now oversold (two people paid at the same moment), tell the owner.
+        try {
+            const skus = [...new Set((Array.isArray(m.items) ? m.items : []).map(i => skuOf(i && i.name)).filter(x => x && STOCK[x]))];
+            if (skus.length) {
+                const st = await stockStatus(skus, { holds: false });
+                const over = skus.filter(x => st[x].sold > st[x].limit);
+                if (over.length) await sendEmail({ to: process.env.OWNER_EMAIL || (process.env.ADMIN_EMAILS || '').split(',')[0], subject: `OVERSOLD: ${over.join(', ')} (order ${ref})`, html: `<p>Order ${esc(ref)} pushed ${esc(over.join(', '))} over its stock limit (${over.map(x => esc(x) + ': ' + st[x].sold + ' sold, limit ' + st[x].limit).join('; ')}). Please contact the latest customer and offer a refund or wait.</p>` });
+            }
+        } catch (err) { console.error('[stock-check]', err.message); }
 
         const owner = process.env.OWNER_EMAIL || (process.env.ADMIN_EMAILS || '').split(',')[0].trim();
         const customerEmail = d.customer && d.customer.email;

@@ -3,6 +3,7 @@
 import crypto from 'node:crypto';
 import { quoteOrder } from '../lib/products.js';
 import { paystack, siteOrigin } from '../lib/paystack.js';
+import { checkStock } from '../lib/stock.js';
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const clean = (v, max = 120) => String(v == null ? '' : v).replace(/[\u0000-\u001f<>]/g, ' ').trim().slice(0, max);
@@ -20,6 +21,9 @@ export default async function handler(req, res) {
     if (!EMAIL.test(email) || fullName.length < 2 || phone.replace(/\D/g, '').length < 9)
         return res.status(400).json({ error: 'Please check your contact details.' });
     if (storeName.length < 3) return res.status(400).json({ error: 'Enter the PEP store you will collect from.' });
+
+    const stock = await checkStock(b.items, email);          // limited-edition items: refuse if there is not enough left
+    if (!stock.ok) return res.status(400).json({ error: stock.message });
 
     const orderId = 'DSC-' + Date.now().toString(36).toUpperCase() + '-' + crypto.randomBytes(3).toString('hex').toUpperCase();
     const origin = siteOrigin(req);

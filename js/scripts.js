@@ -340,7 +340,8 @@ document.querySelectorAll('.product-card').forEach(card => {
 
     plus.addEventListener('click', () => {
         let current = parseInt(value.textContent);
-        if (current < 10) value.textContent = current + 1;
+        const cap = card.dataset.stockLeft ? Number(card.dataset.stockLeft) : 10;   // limited items: never more than what is left
+        if (current < Math.min(10, cap)) value.textContent = current + 1;
     });
 });
 
