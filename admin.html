@@ -784,7 +784,8 @@
             <div class="login-box">
                 <div class="brand">DISCRETE</div>
                 <div class="sub">Studio Admin</div>
-                <input type="hidden" id="adminEmail" value="discreteclothing24@gmail.com" />
+                <label for="adminEmail">Admin Email</label>
+                <input type="email" id="adminEmail" placeholder="you@discrete.co.za" autocomplete="username" style="margin-bottom:16px;" />
                 <label for="adminPassword">Password</label>
                 <input type="password" id="adminPassword" placeholder="Enter password" autocomplete="current-password" />
                 <button class="login-btn" id="adminLoginBtn">Login</button>
@@ -1273,6 +1274,21 @@ orders.forEach((order, idx) => {
                 renderDashboard();
             }
 
+            // Turns Firebase's error code into a message that says what is really wrong.
+            function loginErrorText(err) {
+                const code = (err && err.code) || '';
+                if (['auth/invalid-credential', 'auth/wrong-password', 'auth/user-not-found', 'auth/invalid-email', 'auth/missing-password'].includes(code))
+                    return 'Incorrect email or password.';
+                if (code === 'auth/too-many-requests') return 'Too many attempts. Wait a few minutes, or click Forgot password.';
+                if (code === 'auth/network-request-failed') return 'No connection. Check your internet and try again.';
+                if (code === 'auth/unauthorized-domain') return 'This website address is not allowed in Firebase. Add it under Authentication, Settings, Authorized domains.';
+                if (code === 'auth/operation-not-allowed') return 'Email and password sign-in is switched off in Firebase (Authentication, Sign-in method).';
+                if (code === 'auth/user-disabled') return 'This account has been disabled in Firebase.';
+                if (code === 'auth/invalid-api-key' || code === 'auth/api-key-not-valid.-please-pass-a-valid-api-key.' || /referer|api-key/i.test(code))
+                    return 'Firebase is blocking this website. Check the API key website restrictions in Google Cloud.';
+                return 'Could not sign in (' + (code || 'unknown error') + ').';
+            }
+
             function handleLogin() {
                 const email = emailInput.value.trim();
                 const pass = passwordInput.value;
@@ -1280,7 +1296,8 @@ orders.forEach((order, idx) => {
                 loginBtn.disabled = true;
                 signInWithEmailAndPassword(auth, email, pass)
                     .catch(function(err) {
-                        console.error('Login error:', err); loginError.textContent = (err && err.code === 'auth/invalid-credential') ? 'Incorrect password.' : 'Login failed: ' + (err && err.code ? err.code : err.message);
+                        console.error('Admin sign-in failed:', err && err.code, err && err.message);
+                        loginError.textContent = loginErrorText(err);
                         passwordInput.focus();
                         passwordInput.select();
                     })
@@ -1352,7 +1369,7 @@ orders.forEach((order, idx) => {
                 loginError.textContent = '';
                 loginInfo.textContent = '';
                 if (!email) {
-                    loginError.textContent = 'Could not find the admin email.';
+                    loginError.textContent = 'Type your admin email above first, then click Forgot password.';
                     emailInput.focus();
                     return;
                 }
