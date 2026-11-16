@@ -3,7 +3,7 @@
 Do this on the Vercel Preview address with the Paystack TEST key first, then once on live.
 
 ## 1. Setup check
-- [ ] Open /api/health: secretKeySet true, paystackAcceptsKey true, customersReturnTo is your domain, problems empty
+- [ ] Vercel env vars set: PAYSTACK_SECRET_KEY, SITE_URL (https://www.discreteclothing.co.za), ADMIN_EMAILS. (/api/health was removed for security.)
 - [ ] Paystack dashboard: callback URL = https://DOMAIN/success.html, webhook URL = https://DOMAIN/api/paystack-webhook
 
 ## 2. Payment (test key, then one real small payment on live)
@@ -31,3 +31,10 @@ Do this on the Vercel Preview address with the Paystack TEST key first, then onc
 - [ ] No broken images
 - [ ] Delivery quote works for each province
 - [ ] WhatsApp button opens the right number
+
+## 5. Security headers (after the hardening update)
+- [ ] Browser console (F12) shows no red "Content Security Policy" errors on home, cart, checkout, success, cancel, admin
+- [ ] Fonts and images load; admin login works
+- [ ] On the success page, "Download receipt (PDF)" still works (jsPDF integrity check)
+- [ ] Firebase: Authentication > Settings: turn OFF user sign-up; turn ON 2-step verification for the owner account
+- [ ] Firebase: Firestore rules allow ONLY the admin to read/write orderStatus, and deny everything else

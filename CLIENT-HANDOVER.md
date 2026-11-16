@@ -17,7 +17,7 @@
 Prices are checked on the server. When you change a price on a page you must also change it in `lib/products.js`, otherwise checkout will refuse the cart. Ask your developer (BBA Media) to add or change products.
 
 ## If something breaks
-- Open https://www.discreteclothing.co.za/api/health. It lists what is wrong in plain words.
+- Check the Vercel project: Settings > Environment Variables (PAYSTACK_SECRET_KEY, SITE_URL), then Deployments > Logs. (The old /api/health page was removed for security.)
 - Customers cannot pay: usually the Paystack key in Vercel is wrong or Vercel was not redeployed after a change.
 - Orders missing from admin: sign in again; check ADMIN_EMAILS in Vercel.
 - Lost admin password: Firebase console, Authentication, Users, Reset password.
