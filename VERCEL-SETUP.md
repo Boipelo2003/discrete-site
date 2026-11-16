@@ -10,7 +10,6 @@ Everything below is done in your browser. No coding needed.
   - `order-status.js` confirms the payment on the success page
   - `paystack-webhook.js` receives Paystack's "payment done" message and sends the order emails
   - `orders.js` feeds admin.html (paid orders from Paystack, statuses saved in Firestore)
-  - `health.js` setup checker (delete it once everything works)
 - `lib/`: the price list (`products.js`), a Paystack helper and the admin login check (`adminAuth.js`)
 - `package.json`, `.gitignore`, `.env.example`
 
@@ -68,14 +67,8 @@ Both must start with https. Save.
 4. You should land on the success page showing Order confirmed. In Paystack, Transactions should show the payment with the customer's name, phone, store and items.
 5. When happy, do one real small payment on the live site and refund it from Paystack to confirm everything works end to end.
 
-## Check your setup in one click (api/health.js)
-After deploying, open `https://your-domain/api/health` in your browser. It shows YES/NO answers (never your keys):
-- `secretKeySet` should be true
-- `keyMode` should say live (or test while you are testing)
-- `paystackAcceptsKey` should be true
-- `customersReturnTo` should be your own address ending in /success.html
-- `problems` should be empty
-Anything listed under `problems` tells you exactly what to fix in Vercel. Delete `api/health.js` from GitHub once everything works.
+## Check your setup
+The old `/api/health` page was removed because it revealed setup details to anyone. To check your setup instead: confirm `PAYSTACK_SECRET_KEY` and `SITE_URL` in Vercel > Settings > Environment Variables, Redeploy, then make one test payment (see TESTING-CHECKLIST.md) and look at Vercel > Logs.
 
 ## Order emails (optional but recommended)
 Paystack already emails customers a payment receipt. For a proper DISCRETE-branded confirmation and a new-order alert to you:
@@ -106,7 +99,7 @@ Open `https://www.discreteclothing.co.za/admin.html`, sign in, and your paid ord
 
 ## If you cannot see the success page
 The success page appears after Paystack sends the customer back. Check these in order:
-1. Open `/api/health`. Fix anything under `problems`, then Redeploy.
+1. In Vercel, check `PAYSTACK_SECRET_KEY` and `SITE_URL` are correct, then Redeploy.
 2. Is `api` on GitHub? If checkout says "We could not start the payment", the customer never reaches Paystack, so there is no success page.
 3. Did you pay on Paystack's page and wait for it to finish? Paystack returns the customer to your site automatically.
 4. Press Ctrl+F5 on the success page to clear an old copy.
