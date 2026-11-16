@@ -228,3 +228,33 @@
     initCookies();
     initWishlist();
 })();
+
+// ── LIVE STOCK for limited-edition products ("Limited — only N" / "Sold out") ──
+// The real limit is enforced on the server (api/stock.js, api/paystack-init.js); this just keeps the shop honest.
+(function () {
+    var labels = document.querySelectorAll('[data-stock-sku]');
+    if (!labels.length || !window.fetch) return;
+    fetch('/api/stock').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+        if (!d) return;
+        labels.forEach(function (el) {
+            var s = d[el.getAttribute('data-stock-sku')];
+            if (!s) return;
+            var card = el.closest('.product-card');
+            if (s.left <= 0) {
+                el.textContent = 'Sold out';
+                if (card) {
+                    card.style.opacity = '.6';
+                    card.querySelectorAll('.add-to-cart, .qty-btn, .size-select').forEach(function (b) { b.disabled = true; });
+                    var btn = card.querySelector('.add-to-cart'); if (btn) btn.textContent = 'Sold out';
+                }
+            } else {
+                el.textContent = 'Limited — only ' + s.left;
+                if (card) {
+                    card.dataset.stockLeft = s.left;
+                    var q = card.querySelector('.qty-value');
+                    if (q && Number(q.textContent) > s.left) q.textContent = s.left;
+                }
+            }
+        });
+    }).catch(function () { /* keep the printed label */ });
+})();
