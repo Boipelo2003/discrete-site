@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Order Confirmed | DISCRETE</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { padding-top: 115px; background: #f7f6f4; }
+        .terms-page {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 48px 20px 80px;
+        }
+        .terms-page h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 34px;
+            letter-spacing: .06em;
+            margin-bottom: 8px;
+        }
+        .terms-updated {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 36px;
+        }
+        .terms-page h2 {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            margin: 36px 0 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0ddd8;
+        }
+        .terms-page p, .terms-page li {
+            font-size: 14px;
+            line-height: 1.75;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .terms-page ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .terms-note {
+            background: #fff;
+            border: 1px solid #e0ddd8;
+            padding: 18px 20px;
+            font-size: 13px;
+            color: #555;
+            margin-top: 40px;
+        }
+        .terms-back {
+            display: inline-block;
+            margin-top: 32px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            color: #0a0a0a;
+            text-decoration: underline;
+        }
+
+        .terms-page a { color: #0a0a0a; }
+        .terms-callout {
+            background: #fff;
+            border-left: 3px solid #0a0a0a;
+            padding: 16px 20px;
+            margin: 0 0 28px;
+        }
+        .terms-callout p, .terms-callout li { margin-bottom: 6px; }
+        .terms-callout ul { margin-bottom: 0; }
+        .terms-todo {
+            background: #fff3cd;
+            border: 1px dashed #b58900;
+            padding: 10px 14px;
+            font-size: 13px;
+            margin-bottom: 14px;
+        }
+        .terms-table-wrap { overflow-x: auto; margin: 6px 0 18px; }
+        .terms-table { width: 100%; border-collapse: collapse; background: #fff; font-size: 13px; }
+        .terms-table th, .terms-table td {
+            border: 1px solid #e0ddd8;
+            padding: 10px 12px;
+            text-align: left;
+            line-height: 1.5;
+            white-space: nowrap;
+        }
+        .terms-table th { background: #0a0a0a; color: #fff; font-weight: 600; letter-spacing: .04em; }
+        .terms-page h3 { font-size: 14px; margin: 20px 0 8px; }
+
+        /* footer layout (matches homepage) */
+        .footer-grid { display: grid; grid-template-columns: 1.6fr repeat(4, 1fr); gap: 40px; }
+        .footer-legal {
+            display: flex; flex-wrap: wrap; gap: 8px 24px;
+            padding: 24px 0 8px; margin-top: 28px;
+            border-top: 1px solid rgba(128,128,128,.3);
+            font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+        }
+        .footer-legal a { color: inherit; opacity: .75; text-decoration: none; }
+        .footer-legal a:hover { opacity: 1; text-decoration: underline; }
+        @media (max-width: 900px) {
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .footer-brand { grid-column: 1 / -1; }
+        }
+        @media (max-width: 520px) { .footer-grid { grid-template-columns: 1fr; } }
+
+        [hidden] { display: none !important; }
+        .conf-page { padding: 40px 20px 80px; display: flex; justify-content: center; min-height: calc(100vh - 115px); }
+        .conf-wrap {
+            max-width: 580px; width: 100%; background: #fff; border: 1px solid #e0ddd8;
+            border-radius: 2px; padding: 40px 32px; text-align: center; align-self: flex-start;
+        }
+        .conf-loading { padding: 40px 0; font-size: 13px; color: #666; }
+        .conf-spinner {
+            width: 36px; height: 36px; margin: 0 auto 18px; border-radius: 50%;
+            border: 3px solid #e0ddd8; border-top-color: #0a0a0a; animation: confspin .8s linear infinite;
+        }
+        @keyframes confspin { to { transform: rotate(360deg); } }
+        .conf-icon {
+            width: 56px; height: 56px; margin: 0 auto 20px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .conf-icon svg { width: 28px; height: 28px; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+        .conf-icon.is-ok { background: #f2f8f2; } .conf-icon.is-ok svg { stroke: #2d7a31; }
+        .conf-icon.is-pending { background: #fff8e6; } .conf-icon.is-pending svg { stroke: #b58900; }
+        .conf-icon.is-failed { background: #fff5f5; } .conf-icon.is-failed svg { stroke: #c0392b; }
+        .conf-icon.is-none { background: #f1efeb; } .conf-icon.is-none svg { stroke: #666; }
+        .conf-title { font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: .05em; margin-bottom: 8px; }
+        .conf-sub { font-size: 13px; color: #666; line-height: 1.7; margin: 0 auto 24px; max-width: 46ch; }
+        .conf-order-id {
+            font-family: 'DM Mono', monospace; font-size: 13px; background: #fafaf9;
+            border: 1px solid #e0ddd8; padding: 10px 14px; margin-bottom: 24px; display: inline-block;
+        }
+
+        .conf-receipt { text-align: left; border: 1px solid #e0ddd8; background: #fafaf9; padding: 16px 18px; margin-bottom: 20px; }
+        .conf-rc-title { font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: #888; margin-bottom: 10px; }
+        .conf-rc-row { display: flex; justify-content: space-between; gap: 14px; padding: 6px 0; font-size: 13px; line-height: 1.5; }
+        .conf-rc-row span:last-child { font-family: 'DM Mono', monospace; white-space: nowrap; }
+        .conf-rc-row.muted { color: #888; font-size: 12px; }
+        .conf-rc-row.total { border-top: 1px solid #0a0a0a; margin-top: 8px; padding-top: 10px; font-weight: 700; }
+        .conf-rc-collect { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e0ddd8; font-size: 12px; line-height: 1.6; white-space: pre-line; word-break: break-word; }
+        .conf-rc-collect strong { display: block; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #888; margin-bottom: 4px; }
+
+        .conf-steps { text-align: left; list-style: none; padding: 0; margin: 0 0 24px; counter-reset: s; }
+        .conf-steps li { counter-increment: s; position: relative; padding: 10px 0 10px 40px; font-size: 13px; line-height: 1.6; color: #444; border-bottom: 1px solid #efede9; }
+        .conf-steps li::before {
+            content: counter(s); position: absolute; left: 0; top: 10px; width: 24px; height: 24px; border-radius: 50%;
+            background: #0a0a0a; color: #fff; font: 600 11px 'DM Sans', sans-serif; display: grid; place-items: center;
+        }
+        .conf-steps strong { display: block; color: #0a0a0a; font-size: 13px; }
+        .conf-steps-title { text-align: left; font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: #888; margin-bottom: 4px; }
+
+        .wa-btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
+            background: #25D366; color: #fff; border: none; padding: 15px; font-size: 12px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: .12em; font-family: 'DM Sans', sans-serif;
+            cursor: pointer; border-radius: 2px; text-decoration: none; margin-bottom: 12px; transition: opacity .2s;
+        }
+        .wa-btn:hover { opacity: .9; }
+        .wa-btn svg { width: 18px; height: 18px; fill: currentColor; }
+        .pdf-btn, .co-btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
+            padding: 14px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em;
+            font-family: 'DM Sans', sans-serif; cursor: pointer; border-radius: 2px; text-decoration: none;
+            margin-bottom: 12px; transition: all .2s;
+        }
+        .pdf-btn { background: #fff; color: #0a0a0a; border: 1px solid #0a0a0a; }
+        .pdf-btn:hover { background: #0a0a0a; color: #fff; }
+        .pdf-btn svg { width: 16px; height: 16px; }
+        .co-btn { background: #0a0a0a; color: #fff; border: 1px solid #0a0a0a; }
+        .co-btn:hover { background: #fff; color: #0a0a0a; }
+        .conf-note { font-size: 12px; color: #777; line-height: 1.7; margin-top: 8px; }
+        .conf-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px; margin-top: 22px; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
+        .conf-links a { color: #0a0a0a; text-decoration: underline; }
+        .conf-home { display: inline-block; margin-top: 16px; font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: #888; text-decoration: underline; }
+        @media (max-width: 600px) { .conf-wrap { padding: 28px 18px; } .conf-page { padding: 20px 12px 60px; } }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+<div class="announcement-bar">
+    <div class="marquee-track">
+        <p>🔔 NEW EVENTS COMING SOON &nbsp;|&nbsp; WEBSITE OPEN 24HRS &nbsp;|&nbsp; 🔔 NEW EVENTS COMING SOON &nbsp;|&nbsp; WEBSITE OPEN 24HRS &nbsp;|&nbsp;</p>
+        <p aria-hidden="true">🔔 NEW EVENTS COMING SOON &nbsp;|&nbsp; WEBSITE OPEN 24HRS &nbsp;|&nbsp; 🔔 NEW EVENTS COMING SOON &nbsp;|&nbsp; WEBSITE OPEN 24HRS &nbsp;|&nbsp;</p>
+    </div>
+</div>
+
+<nav>
+    <div class="logo">
+        <a href="index.html"><img src="logo.png" alt="DISCRETE"></a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="new-arrivals.html">NEW ARRIVALS</a></li>
+        <li><a href="t-shirts.html">T-SHIRTS</a></li>
+        <li><a href="accessories.html">ACCESSORIES</a></li>
+    </ul>
+    <div class="nav-meta">
+        <a href="index.html#cart" title="Shopping Cart" class="cart-icon-wrapper">
+            <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.116 60.116 0 0 0-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/></svg>
+            <span id="cart-count" class="cart-badge"></span>
+        </a>
+    </div>
+</nav>
+
+<div class="conf-page">
+    <div class="conf-wrap">
+
+        <div class="conf-loading" id="stLoading" role="status">
+            <div class="conf-spinner"></div>
+            Confirming your order…
+        </div>
+
+        <div id="stMain" hidden>
+            <div class="conf-icon is-ok" id="confIcon"><svg viewBox="0 0 24 24" id="confSvg" aria-hidden="true"></svg></div>
+            <div class="conf-title" id="confTitle"></div>
+            <div class="conf-sub" id="confSub"></div>
+            <div class="conf-order-id" id="orderIdDisp" hidden></div>
+
+            <div class="conf-receipt" id="receipt" hidden>
+                <div class="conf-rc-title">Your order</div>
+                <div id="rcRows"></div>
+                <div class="conf-rc-collect" id="rcCollectBox" hidden><strong>Collection point (PEP PAXI)</strong><span id="rcCollect"></span></div>
+            </div>
+
+            <div id="stepsBlock" hidden>
+                <div class="conf-steps-title">What happens next</div>
+                <ol class="conf-steps">
+                    <li><strong>Send your order on WhatsApp</strong>Tap the green button below. This is how we know to start packing.</li>
+                    <li><strong>We pack your order</strong>Usually within 1–2 business days of confirmed payment.</li>
+                    <li><strong>PEP PAXI delivers to your store</strong><span id="stepEta">Standard delivery takes 7–9 business days after dispatch.</span></li>
+                    <li><strong>Collect with your SMS code and ID</strong>PAXI texts a collection code to the cell number you gave us.</li>
+                </ol>
+            </div>
+
+            <a href="https://wa.me/27699478580" class="wa-btn" id="waBtn" target="_blank" rel="noopener noreferrer" hidden><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.455 5.703 1.456h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg><span id="waBtnText">Send Order via WhatsApp</span></a>
+
+            <button type="button" class="pdf-btn" id="pdfBtn" hidden>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 15h6M9 11h6"/></svg>
+                <span id="pdfBtnText">Download Invoice (PDF)</span>
+            </button>
+
+            <a href="checkout.html" class="co-btn" id="retryBtn" hidden>Return to Checkout</a>
+
+            <div class="conf-note" id="confNote"></div>
+
+            <div class="conf-links">
+                <a href="track-order.html">Track your order</a>
+                <a href="shipping.html">Shipping details</a>
+                <a href="refund-policy.html">Returns &amp; exchanges</a>
+            </div>
+            <a href="index.html" class="conf-home">← Back to Home</a>
+        </div>
+
+    </div>
+</div>
+
+<a href="https://wa.me/27699478580?text=Hi%20DISCRETE%20Studio%2C%20I'm%20inquiring%20about%20an%20item..."
+   class="whatsapp-float"
+   target="_blank"
+   rel="noopener noreferrer"
+   aria-label="Chat with DISCRETE on WhatsApp">
+    <svg viewBox="0 0 24 24" class="whatsapp-icon">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.455 5.703 1.456h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+</a>
+
+<button type="button" id="backToTop" class="back-to-top" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" class="arrow-icon">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+    </svg>
+</button>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <h4>DISCRETE</h4>
+            <p>The art of being seen without being loud. Premium streetwear tailored for the modern youth.</p>
+        </div>
+        <div class="footer-links">
+            <h5>Collections</h5>
+            <ul>
+                <li><a href="new-arrivals.html">New Arrivals</a></li>
+                <li><a href="t-shirts.html">T-Shirts</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h5>Assistance</h5>
+            <ul>
+                <li><a href="faq.html">FAQ</a></li>
+                <li><a href="track-order.html">Track Order</a></li>
+                <li><a href="shipping.html">Shipping Details</a></li>
+                <li><a href="refund-policy.html">Returns &amp; Exchanges</a></li>
+                <li><a href="sizing-guide.html">Sizing Guide</a></li>
+                <li><a href="mailto:discreteclothing24@gmail.com">Contact Us</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h5>Company</h5>
+            <ul>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="index.html#stores">Studio &amp; Events</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h5>Community</h5>
+            <ul>
+                <li><a href="https://www.instagram.com/discrete_clothin?igsh=MXcyNnM3amw1ZTVlOA==" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-legal">
+        <a href="terms.html">Terms &amp; Conditions</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="refund-policy.html">Refund &amp; Cancellation Policy</a>
+        <a href="index.html#cookies">Cookie Settings</a>
+    </div>
+    <div class="footer-bottom">
+        <div>© 2026 DISCRETE STUDIO. All Rights Reserved.</div>
+        <div>Designed for the Loud Minority, Built by the Silent Majority.</div>
+    </div>
+</footer>
+
+<script src="js/scripts.js"></script>
+<script>
+(function () {
+    'use strict';
+
+    // ── CONFIG ──
+    const CLIENT_WHATSAPP = '27699478580';
+    const BUSINESS = {
+        name:      'DISCRETE STUDIO',
+        address:   '3 Topi Street, Dawn Park Ext 46',
+        email:     'discreteclothing24@gmail.com',
+        phone:     '+27 69 947 8580',
+        vatNumber: ''                               // Fill in ONLY if DISCRETE is VAT-registered.
+    };
+    // With no VAT number, invoices are plain invoices with NO VAT lines.
+    // With a VAT number, they become Tax Invoices with the VAT breakdown + VAT number.
+    // (Keep SHOW_VAT in checkout.html in step with this.)
+    const VAT_RATE = 0.15;
+    const IS_VAT = String(BUSINESS.vatNumber || '').trim() !== '';
+
+    const ORDER_TTL_MS   = 7 * 24 * 60 * 60 * 1000;  // keep local order details for 7 days, then wipe
+    const MAX_ATTEMPTS   = 5;
+    const RETRY_DELAY_MS = 1500;
+    const PAXI_PREFIX    = 'PEP PAXI collection point:';
+
+    const $ = id => document.getElementById(id);
+    const money = n => 'R' + Number(n).toFixed(2);
+    const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
+
+    // ── Order id from the return URL (a lookup key ONLY; never proof of payment) ──
+    const params = new URLSearchParams(window.location.search);
+    const rawId = params.get('order_id') || params.get('reference') || params.get('trxref') || params.get('m_payment_id') || '';
+    const orderId = /^[A-Za-z0-9_-]{3,40}$/.test(rawId) ? rawId : '';
+
+    // ── Local order details saved by checkout.html (expire after 7 days) ──
+    let order = null;
+    try {
+        const raw = localStorage.getItem('discrete_last_order');
+        if (raw) {
+            const p = JSON.parse(raw);
+            const age = Date.now() - new Date(p && p.date).getTime();
+            if (!p || !(age < ORDER_TTL_MS)) localStorage.removeItem('discrete_last_order');
+            else if (orderId && p.orderId === orderId) order = p;
+        }
+    } catch (err) { console.warn('[DISCRETE] Could not read saved order:', err); }
+
+    const ICONS = {
+        ok:      '<path d="M4.5 12.75l6 6 9-13.5"/>',
+        pending: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+        failed:  '<path d="M6 6l12 12M18 6L6 18"/>',
+        none:    '<circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/>'
+    };
+    const COPY = {
+        ok:      ['Payment Successful', "Thank you! Your payment went through. One last step: send your order details to us on WhatsApp so we can get it packed and shipped."],
+        pending: ['Order Received', "Thank you! We're still confirming your payment with Paystack, which can take a few minutes. Send us your order on WhatsApp so we can get started as soon as it clears."],
+        failed:  ['Payment Not Completed', "We couldn't confirm your payment, so your order hasn't gone through. Your cart is still saved. If money left your account, message us with your order number and we'll sort it out."],
+        none:    ['No Order Found', "We couldn't find a recent order on this device. If you've just paid, message us with your order number and we'll help."]
+    };
+
+    // ── Collection point wording (older orders used a plain shipping address) ──
+    function collectionInfo() {
+        if (!order) return null;
+        const a = (order.shipping && order.shipping.address) || '';
+        const isPaxi = a.indexOf(PAXI_PREFIX) === 0;
+        const line1 = isPaxi ? a.slice(PAXI_PREFIX.length).trim() : a;
+        const s = order.shipping || {};
+        return {
+            label: isPaxi ? 'PEP PAXI Collection Point' : 'Shipping Address',
+            text:  `${line1}, ${s.city || ''}, ${s.province || ''} ${s.postalCode || ''}`.replace(/\s+,/g, ',').trim()
+        };
+    }
+    const deliveryLabel = () => (order && order.shippingLabel) ? `Delivery (${order.shippingLabel})` : 'Delivery (PEP PAXI)';
+    const custName = () => order ? `${order.customer.firstName} ${order.customer.lastName}`.trim() : '';
+    const totals = () => {
+        const total = Number(order.total) || 0;
+        const exVat = total / (1 + VAT_RATE);
+        return { total, exVat, vat: total - exVat, ship: Number(order.shippingCost) || 0 };
+    };
+
+    // ── WhatsApp message ──
+    function buildWhatsAppMessage(state, data) {
+        const paid = state === 'ok';
+        let m = paid
+            ? `Hi DISCRETE! 👋 I've just completed payment for my order.\n\n`
+            : `Hi DISCRETE! 👋 I've just placed and paid for an order (payment still confirming).\n\n`;
+        m += `*Order ID:* ${orderId}\n`;
+        if (order) {
+            const c = collectionInfo(), t = totals();
+            m += `*Name:* ${custName()}\n`;
+            if (order.customer.phone) m += `*Phone:* ${order.customer.phone}\n`;
+            if (order.customer.email) m += `*Email:* ${order.customer.email}\n`;
+            m += `*${c.label}:* ${c.text}\n\n*Items:*\n`;
+            m += order.items.map(i => `• ${i.name}${i.color ? ' ' + cap(i.color) : ''} (${i.size}) × ${i.qty} — ${money(i.price * i.qty)}`).join('\n') + '\n\n';
+            m += `*${deliveryLabel()}:* ${money(t.ship)}\n`;
+            if (IS_VAT) m += `*Subtotal (excl. VAT):* ${money(t.exVat)}\n*VAT (15%):* ${money(t.vat)}\n`;
+            m += `*Total ${paid ? 'Paid' : ''}${IS_VAT ? ' (incl. VAT)' : ''}:* ${money(t.total)}\n\n`;
+        } else {
+            if (data && data.total) m += `*Total:* ${money(data.total)}\n`;
+            m += `\n`;
+        }
+        m += `Please confirm my order. Thanks!`;
+        return m;
+    }
+
+    // ── Receipt block on the page ──
+    function addRow(parent, label, value, cls) {
+        const r = document.createElement('div');
+        r.className = 'conf-rc-row' + (cls ? ' ' + cls : '');
+        const a = document.createElement('span'); a.textContent = label;
+        const b = document.createElement('span'); b.textContent = value;
+        r.appendChild(a); r.appendChild(b); parent.appendChild(r);
+    }
+    function renderReceipt(state, data) {
+        const rows = $('rcRows'); rows.textContent = '';
+        if (order) {
+            const t = totals();
+            order.items.forEach(i => addRow(rows, `${i.name}${i.color ? ' · ' + cap(i.color) : ''} (${i.size}) × ${i.qty}`, money(i.price * i.qty)));
+            addRow(rows, deliveryLabel(), money(t.ship));
+            if (IS_VAT) addRow(rows, 'Includes VAT (15%)', money(t.vat), 'muted');
+            addRow(rows, state === 'ok' ? 'Total paid' : 'Total', money(t.total), 'total');
+            const c = collectionInfo();
+            $('rcCollect').textContent = c.text;
+            $('rcCollectBox').hidden = false;
+            $('receipt').hidden = false;
+        } else if (data && data.total) {
+            const first = data.firstItemName ? (data.itemCount > 1 ? `${data.firstItemName} +${data.itemCount - 1} more` : data.firstItemName) : 'DISCRETE order';
+            addRow(rows, first, '');
+            addRow(rows, state === 'ok' ? 'Total paid' : 'Total', money(data.total), 'total');
+            $('rcCollectBox').hidden = true;
+            $('receipt').hidden = false;
+        }
+    }
+
+    // ── Invoice PDF ──
+    function generatePdf(state) {
+        if (!order) {
+            alert('Order details are not available on this device, so a PDF cannot be generated. Your WhatsApp message still has everything we need.');
+            return;
+        }
+        if (!window.jspdf) { alert('The PDF tool could not load. Please check your connection and try again.'); return; }
+        const t = totals(), c = collectionInfo();
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+        const W = doc.internal.pageSize.getWidth(), margin = 48;
+        let y = 60;
+        const ensure = need => { if (y + need > 780) { doc.addPage(); y = 60; } };
+
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(22);
+        doc.text(BUSINESS.name, margin, y);
+        doc.setFontSize(11); doc.setFont('helvetica', 'normal');
+        doc.text(IS_VAT ? 'TAX INVOICE' : 'INVOICE', W - margin, y, { align: 'right' });
+        y += 18; doc.setFontSize(9); doc.setTextColor(110, 110, 110);
+        [BUSINESS.address, BUSINESS.email, BUSINESS.phone, IS_VAT ? 'VAT Reg No: ' + BUSINESS.vatNumber : '']
+            .filter(Boolean).forEach(line => { doc.text(line, margin, y); y += 12; });
+        doc.setTextColor(0, 0, 0);
+        y += 8; doc.setDrawColor(220, 220, 220); doc.line(margin, y, W - margin, y); y += 26;
+
+        doc.setFontSize(10);
+        doc.text(`Invoice / Order No: ${order.orderId}`, margin, y);
+        doc.text(`Date: ${new Date(order.date || Date.now()).toLocaleDateString('en-ZA')}`, W - margin, y, { align: 'right' });
+        y += 28;
+
+        doc.setFont('helvetica', 'bold'); doc.text('Customer', margin, y); y += 16;
+        doc.setFont('helvetica', 'normal');
+        doc.text(custName(), margin, y); y += 14;
+        if (order.customer.email) { doc.text(order.customer.email, margin, y); y += 14; }
+        if (order.customer.phone) { doc.text(order.customer.phone, margin, y); y += 14; }
+        y += 8;
+        doc.setFont('helvetica', 'bold'); doc.text(c.label, margin, y); y += 16;
+        doc.setFont('helvetica', 'normal');
+        doc.text(c.text, margin, y, { maxWidth: W - margin * 2 }); y += 34;
+
+        doc.setFont('helvetica', 'bold');
+        doc.text('Item', margin, y);
+        doc.text('Qty', W - margin - 150, y, { align: 'right' });
+        doc.text('Unit Price', W - margin - 80, y, { align: 'right' });
+        doc.text('Total', W - margin, y, { align: 'right' });
+        y += 10; doc.line(margin, y, W - margin, y); y += 18;
+
+        doc.setFont('helvetica', 'normal');
+        order.items.forEach(i => {
+            ensure(30);
+            const label = `${i.name}${i.color ? ' - ' + cap(i.color) : ''} (Size ${i.size})`;
+            doc.text(label, margin, y, { maxWidth: W - margin * 2 - 240 });
+            doc.text(String(i.qty), W - margin - 150, y, { align: 'right' });
+            doc.text(money(i.price), W - margin - 80, y, { align: 'right' });
+            doc.text(money(i.price * i.qty), W - margin, y, { align: 'right' });
+            y += 20;
+        });
+        y += 10; doc.line(margin, y, W - margin, y); y += 24;
+        ensure(140);
+
+        const itemsTotal = order.items.reduce((s, i) => s + i.price * i.qty, 0);
+        const row = (label, value, bold) => {
+            doc.setFont('helvetica', bold ? 'bold' : 'normal');
+            doc.text(label, W - margin - 190, y);
+            doc.text(value, W - margin, y, { align: 'right' });
+            y += 18;
+        };
+        row('Merchandise:', money(itemsTotal), false);
+        row(deliveryLabel() + ':', money(t.ship), false);
+        if (IS_VAT) {
+            y += 4; doc.line(W - margin - 190, y - 12, W - margin, y - 12);
+            row('Subtotal (excl. VAT):', money(t.exVat), false);
+            row('VAT (15%):', money(t.vat), false);
+        }
+        y += 4;
+        row(state === 'ok' ? (IS_VAT ? 'TOTAL PAID (incl. VAT):' : 'TOTAL PAID:') : 'TOTAL:', money(t.total), true);
+
+        y += 28; doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(140, 140, 140);
+        doc.text(state === 'ok'
+            ? 'Thank you for shopping with DISCRETE. Payment received.'
+            : 'Thank you for shopping with DISCRETE. Payment is still being confirmed.', margin, y);
+        y += 12;
+        doc.text('We will be in touch on WhatsApp to confirm your PEP PAXI delivery.' + (IS_VAT ? ' VAT is included in all listed prices.' : ''), margin, y);
+        doc.save(`DISCRETE-Invoice-${order.orderId}.pdf`);
+    }
+
+    // ── Render a final state ──
+    function render(state, data) {
+        window.__dscState = state;
+        $('stLoading').hidden = true;
+        $('stMain').hidden = false;
+        $('confIcon').className = 'conf-icon is-' + state;
+        $('confSvg').innerHTML = ICONS[state];
+        $('confTitle').textContent = COPY[state][0];
+        $('confSub').textContent = COPY[state][1];
+        if (orderId) { $('orderIdDisp').textContent = 'Order ' + orderId; $('orderIdDisp').hidden = false; }
+
+        const good = state === 'ok' || state === 'pending';
+        const wa = $('waBtn');
+        wa.hidden = false;
+        if (good) {
+            wa.href = `https://wa.me/${CLIENT_WHATSAPP}?text=${encodeURIComponent(buildWhatsAppMessage(state, data))}`;
+            $('waBtnText').textContent = 'Send Order via WhatsApp';
+            renderReceipt(state, data);
+            if (order && order.shippingEta) $('stepEta').textContent = `${order.shippingLabel || 'PEP PAXI'} takes ${order.shippingEta} after dispatch.`;
+            $('stepsBlock').hidden = false;
+            $('pdfBtnText').textContent = IS_VAT ? 'Download Tax Invoice (PDF)' : 'Download Invoice (PDF)';
+            $('pdfBtn').hidden = !order;
+            $('confNote').textContent = 'Please don\u2019t skip the WhatsApp step. It\u2019s how we know to prepare your package.' +
+                (order ? ' Your order details are kept on this device for 7 days so you can re-download your invoice.' : '');
+        } else {
+            const help = orderId ? `Hi DISCRETE Studio, I need help with my payment. Order: ${orderId}` : 'Hi DISCRETE Studio, I need help with my order.';
+            wa.href = `https://wa.me/${CLIENT_WHATSAPP}?text=${encodeURIComponent(help)}`;
+            $('waBtnText').textContent = 'Contact Us on WhatsApp';
+            $('retryBtn').hidden = state !== 'failed';
+        }
+
+        // Only clear the cart once the customer has actually come back from paying.
+        if (good) {
+            try { localStorage.removeItem('discreteCart'); localStorage.removeItem('discrete_cart_summary'); localStorage.removeItem('discrete_cart_total'); } catch (e) {}
+            if (typeof updateCartCount === 'function') updateCartCount();
+        }
+    }
+
+
+    // ── Ask the server for the REAL payment status (set by Paystack's server-to-server ITN) ──
+    async function verify(attempt) {
+        try {
+            const res = await fetch('/api/order-status?id=' + encodeURIComponent(orderId));
+            if (res.status === 404) return render('pending', null);
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const data = await res.json();
+            const s = String(data.status || '').toLowerCase();
+            if (s === 'complete') return render('ok', data);
+            if (s === 'failed' || s === 'cancelled' || s === 'canceled') return render('failed', data);
+            if (attempt < MAX_ATTEMPTS) return setTimeout(() => verify(attempt + 1), RETRY_DELAY_MS);
+            return render('pending', data);
+        } catch (err) {
+            if (attempt < MAX_ATTEMPTS) return setTimeout(() => verify(attempt + 1), RETRY_DELAY_MS);
+            console.warn('[DISCRETE] Could not verify order status:', err);
+            return render('pending', null);
+        }
+    }
+
+    $('pdfBtn').addEventListener('click', () => generatePdf(window.__dscState || 'pending'));
+
+    if (!orderId) render('none', null); else verify(1);
+})();
+</script>
+</body>
+</html>
