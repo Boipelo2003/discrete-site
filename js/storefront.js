@@ -33,7 +33,6 @@
     var THUMB = {
         D01: 'images/d01-black-front.webp', D02: 'images/d02-front.webp', 
         D05: 'images/d05-front.webp', 
-        D08: 'images/d08.jpg', 
         D10: 'images/discrete-knitted-beanie.webp', D11: 'images/dsc-beanie-black.webp',
         D13: 'images/discrete-halo-tee-front.webp',
         D14: 'images/d14-blue-front.webp', D18: 'images/d18-front.webp', D19: 'images/d19-front.webp', D15: 'images/d15-front.webp', D16: 'images/d16-front.webp', D17: 'images/d17-red-front.webp'

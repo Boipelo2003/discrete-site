@@ -541,6 +541,20 @@
             border-bottom: none;
         }
 
+        /* ── ITEMS + SHIP-TO (what you need to pack and post an order) ── */
+        .order-items-list { min-width: 220px; font-size: 12px; }
+        .order-items-list .item-line { display: flex; justify-content: space-between; gap: 14px; padding: 5px 0; border-bottom: 1px solid var(--grey-light); }
+        .order-items-list .item-line:last-child { border-bottom: none; }
+        .order-items-list .item-name { font-weight: 600; color: var(--black); display: block; }
+        .order-items-list .item-meta { color: var(--grey-mid); display: block; }
+        .ship-block { min-width: 230px; font-size: 12px; line-height: 1.6; }
+        .ship-method { display: inline-block; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; background: var(--black); color: #fff; padding: 2px 8px; border-radius: 20px; margin-bottom: 4px; }
+        .ship-dest { font-weight: 600; color: var(--black); }
+        .ship-contact { color: var(--grey-mid); }
+        .ship-contact a { color: inherit; }
+        .ship-copy { margin-top: 6px; font-size: 11px; padding: 4px 10px; border: 1px solid var(--grey-light); background: #fff; cursor: pointer; border-radius: var(--radius); }
+        .ship-copy:hover { background: var(--grey); }
+
         /* ── EMPTY STATE ── */
         .empty-state {
             text-align: center;
@@ -846,7 +860,7 @@
                         <option value="delivered">Delivered</option>
                         <option value="cancelled">Cancelled</option>
                     </select>
-                    <input type="text" id="searchInput" placeholder="Search customer or order ID..." />
+                    <input type="text" id="searchInput" placeholder="Search name, order, phone, store..." />
                     <button class="export-btn" id="exportBtn">Export CSV</button>
                 </div>
             </div>
@@ -859,6 +873,7 @@
                             <th>Order</th>
                             <th>Customer</th>
                             <th>Items</th>
+                            <th>Ship to</th>
                             <th>Total</th>
                             <th>Date</th>
                             <th>Status</th>
@@ -1046,14 +1061,14 @@
 
             // ─── RENDER DASHBOARD ─────────────────────────────────────
             async function renderDashboard() {
-                orderTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:30px;color:#888;font-size:12px;letter-spacing:.08em;">Loading orders…</td></tr>';
+                orderTableBody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:30px;color:#888;font-size:12px;letter-spacing:.08em;">Loading orders…</td></tr>';
                 emptyState.style.display = 'none';
 
                 let allOrders = [];
                 try {
                     allOrders = await getOrders();
                 } catch(err) {
-                    orderTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:30px;color:#c0392b;font-size:12px;">Failed to load orders. Check that you are signed in with an admin account.</td></tr>';
+                    orderTableBody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:30px;color:#c0392b;font-size:12px;">Failed to load orders. Check that you are signed in with an admin account.</td></tr>';
                     return;
                 }
 
@@ -1071,7 +1086,10 @@
                         const id    = (o.id || '').toLowerCase();
                         const name  = ((o.customer?.firstName || '') + ' ' + (o.customer?.lastName || '')).toLowerCase();
                         const email = (o.customer?.email || '').toLowerCase();
-                        return id.includes(search) || name.includes(search) || email.includes(search);
+                        const phone = (o.customer?.phone || '').toLowerCase();
+                        const dest  = (o.shipping?.address || '').toLowerCase();
+                        const prods = (o.items || []).map(i => i.name || '').join(' ').toLowerCase();
+                        return id.includes(search) || name.includes(search) || email.includes(search) || phone.includes(search) || dest.includes(search) || prods.includes(search);
                     });
                 }
 
@@ -1110,14 +1128,39 @@ orders.forEach((order, idx) => {
     items.forEach(item => {
         const qty = Number(item.quantity) || 1;
         const price = Number(item.price) || 0;
-        const color = item.color ? ' · ' + escapeHtml(item.color.charAt(0).toUpperCase() + item.color.slice(1)) : '';
+        const colorTxt = item.color ? ' · Colour: ' + escapeHtml(item.color.charAt(0).toUpperCase() + item.color.slice(1)) : '';
         itemsDetailHtml += `
                 <div class="item-line">
-                    <span>${escapeHtml(item.name)} ${color} · ${escapeHtml(item.size)} × ${qty}</span>
-                    <span>${formatCurrency(price * qty)}</span>
+                    <div>
+                        <span class="item-name">${escapeHtml(item.name)}</span>
+                        <span class="item-meta">Size: ${escapeHtml(item.size || '—')}${colorTxt} · Qty: ${qty}</span>
+                    </div>
+                    <span>${price ? formatCurrency(price * qty) : ''}</span>
                 </div>
             `;
     });
+
+    // Everything needed to post the parcel
+    const fullName = ((order.customer?.firstName || '') + ' ' + (order.customer?.lastName || '')).trim();
+    const phone = order.customer?.phone || '';
+    const method = order.shipping?.method || '';
+    const dest = order.shipping?.address || '';
+    const copyText = [
+        'Order: ' + (order.id || ''),
+        'Name: ' + fullName,
+        'Phone: ' + phone,
+        'Email: ' + (order.customer?.email || ''),
+        'Delivery: ' + method,
+        dest,
+        'Items: ' + items.map(i => (Number(i.quantity) || 1) + ' x ' + i.name + ' (' + (i.size || '') + (i.color ? ', ' + i.color : '') + ')').join('; ')
+    ].filter(Boolean).join('\n');
+    const shipHtml = `
+        <div class="ship-block">
+            <span class="ship-method">${escapeHtml(method || 'Method not recorded')}</span>
+            <div class="ship-dest">${dest ? escapeHtml(dest) : 'No collection point recorded'}</div>
+            <div class="ship-contact">${escapeHtml(fullName)}${phone ? ' · <a href="tel:' + escapeHtml(phone.replace(/[^\d+]/g, '')) + '">' + escapeHtml(phone) + '</a>' : ''}</div>
+            <button type="button" class="ship-copy" data-copy="${escapeHtml(copyText)}">Copy shipping details</button>
+        </div>`;
 
     const safeOrderId = escapeHtml(order.id || '—');
 
@@ -1129,11 +1172,9 @@ orders.forEach((order, idx) => {
                     <span class="email">${email}</span>
                 </td>
                 <td>
-                    <button class="order-items-toggle" data-target="items-${idx}" data-count="${items.length}">${itemSummary}</button>
-                    <div class="order-items-detail" id="items-${idx}">
-                        ${itemsDetailHtml}
-                    </div>
+                    <div class="order-items-list">${itemsDetailHtml || '—'}</div>
                 </td>
+                <td>${shipHtml}</td>
                 <td><span class="order-total">${formatCurrency(order.total || 0)}</span></td>
                 <td><span class="order-date">${escapeHtml(formatDate(order.date || Date.now()))}</span></td>
                 <td>${getStatusBadge(status)}</td>
@@ -1167,6 +1208,19 @@ orders.forEach((order, idx) => {
                     });
                 });
 
+                // ─── EVENT: copy shipping details ────────────────────
+                document.querySelectorAll('.ship-copy').forEach(btn => {
+                    btn.addEventListener('click', async function() {
+                        const text = this.getAttribute('data-copy') || '';
+                        const label = this.textContent;
+                        try {
+                            await navigator.clipboard.writeText(text);
+                            this.textContent = 'Copied ✓';
+                            setTimeout(() => { this.textContent = label; }, 1500);
+                        } catch (e) { window.prompt('Copy these details:', text); }
+                    });
+                });
+
                 // ─── EVENT: status change ────────────────────────────
                 document.querySelectorAll('.status-select').forEach(sel => {
                     sel.addEventListener('change', async function() {
@@ -1193,11 +1247,12 @@ orders.forEach((order, idx) => {
                     return;
                 }
 
-                const headers = ['Order ID', 'Customer', 'Email', 'Phone', 'Address', 'Items', 'Total', 'Status', 'Date'];
+                const headers = ['Order ID', 'Customer', 'Email', 'Phone', 'Delivery method', 'Collection point', 'Items', 'Total', 'Status', 'Date'];
                 const rows = orders.map(o => {
                     const name = (o.customer?.firstName || '') + ' ' + (o.customer?.lastName || '');
                     const email = o.customer?.email || '';
                     const phone = o.customer?.phone || '';
+                    const method = o.shipping?.method || '';
                     const addr = o.shipping?.address || '';
                     const items = (o.items || []).map(i =>
                         `${i.name} (${i.size}${i.color ? ', ' + i.color : ''}) × ${i.quantity || 1}`
@@ -1207,6 +1262,7 @@ orders.forEach((order, idx) => {
                         name,
                         email,
                         phone,
+                        method,
                         addr,
                         items,
                         (o.total || 0).toFixed(2),

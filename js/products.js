@@ -11,7 +11,6 @@ const ALL_PRODUCTS = [
     { name: 'D02 — Discrete Archive Tee',        price: 'R400',  category: 'T-Shirts',    section: 't-shirts',    page: 't-shirts.html' },
     { name: 'D05 — Discrete Petal Code Tee',     price: 'R400',  category: 'T-Shirts',    section: 't-shirts',    page: 't-shirts.html' },
     { name: 'D13 — Discrete Halo Tee',           price: 'R400',  category: 'T-Shirts',    section: 't-shirts',    page: 't-shirts.html' },
-    { name: 'D08 — Discrete Cap',                price: 'R250',  category: 'Accessories', section: 'accessories', page: 'accessories.html' },
     { name: 'D10 — Discrete Knitted Beanies',    price: 'R250',  category: 'Accessories', section: 'accessories', page: 'accessories.html' },
     { name: 'D11 — DSC Beanies',                 price: 'R150',  category: 'Accessories', section: 'accessories', page: 'accessories.html' },
 ];
