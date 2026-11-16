@@ -4,6 +4,9 @@ function esc(str) {
         ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]
     );
 }
+
+// Remove the discontinued D08 cap from any cart saved in a visitor's browser.
+try { const _c = JSON.parse(localStorage.getItem('discreteCart')); if (Array.isArray(_c) && _c.some(i => i && /^D08\b/i.test(i.name))) localStorage.setItem('discreteCart', JSON.stringify(_c.filter(i => !(i && /^D08\b/i.test(i.name))))); } catch (e) { /* storage blocked */ }
 // ====================================================
 // CART BADGE: works on every page, even ones without the cart popup
 // ====================================================
@@ -441,7 +444,6 @@ document.querySelectorAll('.product-card').forEach(card => {
         { name: 'D02 — Discrete Archive Tee',        price: 'R400',  category: 'T-Shirts',    section: 't-shirts',    page: 't-shirts.html' },
         { name: 'D05 — Discrete Petal Code Tee',     price: 'R400',  category: 'T-Shirts',    section: 't-shirts',    page: 't-shirts.html' },
         { name: 'D13 — Discrete Halo Tee',           price: 'R400',  category: 'T-Shirts',    section: 't-shirts',    page: 't-shirts.html' },
-        { name: 'D08 — Discrete Cap',                price: 'R250',  category: 'Accessories', section: 'accessories', page: 'accessories.html' },
         { name: 'D10 — Discrete Knitted Beanies',    price: 'R250',  category: 'Accessories', section: 'accessories', page: 'accessories.html' },
         { name: 'D11 — DSC Beanies',                 price: 'R150',  category: 'Accessories', section: 'accessories', page: 'accessories.html' },
     ];
