@@ -274,7 +274,7 @@ nav {
     background-color: var(--bg-color);
 }
 
-.manifesto h2 {
+.manifesto h1, .manifesto h2 {
     font-size: 32px;
     font-weight: 400;
     line-height: 1.6;
@@ -1209,7 +1209,7 @@ body.scroll-down nav {
         padding: 60px 6%;
     }
 
-    .manifesto h2 {
+    .manifesto h1, .manifesto h2 {
         font-size: 20px;
         line-height: 1.7;
     }
@@ -1352,7 +1352,7 @@ body.scroll-down nav {
         font-size: 28px;
     }
 
-    .manifesto h2 {
+    .manifesto h1, .manifesto h2 {
         font-size: 17px;
     }
 }
