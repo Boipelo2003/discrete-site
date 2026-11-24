@@ -446,7 +446,7 @@
         try {
             const res = await fetch('/api/quote', {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ items: cart })
+                body: JSON.stringify({ items: cart, code: (function () { try { return String(localStorage.getItem('discreteCode') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 30); } catch (e) { return ''; } })() })
             });
             if (my !== seq) return;
             if (res.status === 400) { quote = null; quoteState = 'invalid'; }

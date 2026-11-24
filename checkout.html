@@ -258,6 +258,14 @@
         <section class="ck-summary" aria-labelledby="h4">
             <h2 class="ck-h" id="h4">Order summary</h2>
             <div id="oiList"></div>
+            <div class="ck-code" id="codeBox" style="margin:16px 0 8px">
+                <label class="vh" for="codeInput">Discount code</label>
+                <div style="display:flex;gap:8px">
+                    <input class="ck-input" id="codeInput" placeholder="Discount code" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="30" style="flex:1;text-transform:uppercase">
+                    <button type="button" class="ck-btn-outline" id="codeBtn" style="padding:0 20px;margin:0">Apply</button>
+                </div>
+                <div id="codeMsg" role="status" aria-live="polite" style="font-size:15px;margin-top:8px;min-height:20px"></div>
+            </div>
             <div class="ck-totals">
                 <div class="ck-row"><span>Subtotal</span><span id="subDisp">R 0.00</span></div>
                 <div class="ck-row" id="discRow" style="display:none;color:#b00000;font-weight:700"><span id="discLabel">Black Friday</span><span id="discDisp">R 0.00</span></div>
@@ -326,6 +334,38 @@
     let groupedCart = {};
     let grandTotal = 0;
     let clientSub = 0;
+
+    // Discount code (influencer links like /?code=KEITU10 are remembered by js/scripts.js). The SERVER checks it.
+    const normCode = v => String(v || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 30);
+    let appliedCode = '';
+    try {
+        const fromLink = normCode(new URLSearchParams(location.search).get('code'));
+        if (fromLink) localStorage.setItem('discreteCode', fromLink);
+        appliedCode = normCode(localStorage.getItem('discreteCode'));
+    } catch (e) { /* storage blocked */ }
+    function rememberCode() { try { appliedCode ? localStorage.setItem('discreteCode', appliedCode) : localStorage.removeItem('discreteCode'); } catch (e) { /* storage blocked */ } }
+    function showCode() {
+        const msg = $('codeMsg'), inp = $('codeInput');
+        msg.textContent = '';
+        if (!appliedCode) { inp.value = ''; return; }
+        inp.value = appliedCode;
+        const r = quote && quote.codeResult;
+        if (!r) return;                                   // quote not loaded yet
+        if (r.ok) {
+            msg.style.color = '#1a7f37';
+            msg.appendChild(document.createTextNode('Code ' + r.code + ' applied. '));
+            const rm = document.createElement('button');
+            rm.type = 'button'; rm.textContent = 'Remove';
+            rm.style.cssText = 'background:none;border:0;padding:0;text-decoration:underline;cursor:pointer;color:inherit;font:inherit';
+            rm.addEventListener('click', () => { appliedCode = ''; rememberCode(); loadQuote(); });
+            msg.appendChild(rm);
+        } else {
+            msg.style.color = '#b00000';
+            msg.textContent = r.message || 'That code is not valid.';
+            appliedCode = ''; rememberCode();             // a code that does not work is not kept
+        }
+    }
+    function applyTyped() { appliedCode = normCode($('codeInput').value); rememberCode(); loadQuote(); }
 
     let quote = null;                 // { merchandise, bag, options:[{id,label,eta,fee,total}] }
     let quoteState = 'idle';          // idle | loading | ok | error | invalid
@@ -543,7 +583,7 @@
         quoteState = 'loading';
         renderOptions(); renderTotals();
         try {
-            const res = await fetch('/api/quote', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: cart }) });
+            const res = await fetch('/api/quote', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: cart, code: appliedCode }) });
             if (res.status === 400) { quote = null; quoteState = 'invalid'; }
             else {
                 if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -556,12 +596,14 @@
             console.warn('[DISCRETE] Could not get delivery quote:', err);
             quote = null; quoteState = 'error';
         }
-        checkPrices(); renderOptions(); renderTotals();
+        checkPrices(); renderOptions(); renderTotals(); showCode();
     }
 
     renderItems();
     renderTotals();
     renderOptions();
+    $('codeBtn').addEventListener('click', applyTyped);
+    $('codeInput').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); applyTyped(); } });
     loadQuote();
 
     // ── Pay with Paystack ──
@@ -595,6 +637,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     items: cart,
+                    code: appliedCode,
                     shippingId: opt.id,
                     customer: { fullName: v('fullName'), email: v('email'), phone: v('phone'), altPhone: v('altPhone') },
                     collection: { province: v('province'), town: v('town'), storeName }

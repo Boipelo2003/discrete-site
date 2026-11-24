@@ -845,6 +845,9 @@
                 </div>
             </div>
 
+            <!-- INFLUENCER CODES -->
+            <div id="codePanel" style="display:none;margin:0 0 22px;padding:14px 18px;border:1px solid var(--grey-light);border-radius:var(--radius);font-size:13px;line-height:1.9"></div>
+
             <!-- TOOLBAR -->
             <div class="toolbar">
                 <div class="left">
@@ -1089,7 +1092,8 @@
                         const phone = (o.customer?.phone || '').toLowerCase();
                         const dest  = (o.shipping?.address || '').toLowerCase();
                         const prods = (o.items || []).map(i => i.name || '').join(' ').toLowerCase();
-                        return id.includes(search) || name.includes(search) || email.includes(search) || phone.includes(search) || dest.includes(search) || prods.includes(search);
+                        const promo = (o.promo || '').toLowerCase();
+                        return id.includes(search) || name.includes(search) || email.includes(search) || phone.includes(search) || dest.includes(search) || prods.includes(search) || promo.includes(search);
                     });
                 }
 
@@ -1106,6 +1110,23 @@
                 statPendingOrders.textContent = pendingCount;
                 statPaidOrders.textContent    = paidCount;
                 orderCount.textContent        = orders.length + ' order' + (orders.length !== 1 ? 's' : '');
+
+                // Influencer codes: how many paid orders and how much each code has brought in
+                const byCode = {};
+                allOrders.forEach(o => {
+                    const m = /^Code ([A-Z0-9]+)(?: \(([^)]*)\))?/.exec(o.promo || '');
+                    if (!m || !['paid', 'shipped', 'delivered'].includes((o.status || 'pending').toLowerCase())) return;
+                    const c = byCode[m[1]] || (byCode[m[1]] = { who: m[2] || '', n: 0, sum: 0 });
+                    c.n += 1; c.sum += (o.total || 0);
+                });
+                const panel = document.getElementById('codePanel');
+                const keys = Object.keys(byCode);
+                if (keys.length) {
+                    panel.style.display = '';
+                    panel.innerHTML = '<div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey-mid);margin-bottom:4px">Influencer codes</div>' +
+                        keys.sort((a, b) => byCode[b].sum - byCode[a].sum).map(k =>
+                            '<div><strong>' + escapeHtml(k) + '</strong>' + (byCode[k].who ? ' (' + escapeHtml(byCode[k].who) + ')' : '') + ' &mdash; ' + byCode[k].n + ' order' + (byCode[k].n !== 1 ? 's' : '') + ', ' + formatCurrency(byCode[k].sum) + '</div>').join('');
+                } else { panel.style.display = 'none'; }
 
                 // Render table
                 if (orders.length === 0) {
@@ -1247,7 +1268,7 @@ orders.forEach((order, idx) => {
                     return;
                 }
 
-                const headers = ['Order ID', 'Customer', 'Email', 'Phone', 'Delivery method', 'Collection point', 'Items', 'Total', 'Status', 'Date'];
+                const headers = ['Order ID', 'Customer', 'Email', 'Phone', 'Delivery method', 'Collection point', 'Items', 'Promo / code', 'Total', 'Status', 'Date'];
                 const rows = orders.map(o => {
                     const name = (o.customer?.firstName || '') + ' ' + (o.customer?.lastName || '');
                     const email = o.customer?.email || '';
@@ -1265,6 +1286,7 @@ orders.forEach((order, idx) => {
                         method,
                         addr,
                         items,
+                        o.promo || '',
                         (o.total || 0).toFixed(2),
                         (o.status || 'pending').toUpperCase(),
                         formatDate(o.date || Date.now())
