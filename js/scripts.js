@@ -549,7 +549,7 @@ document.querySelectorAll('.product-card').forEach(card => {
                 <span class="search-result-name">${esc(p.name)}</span>
                 <span class="search-result-meta">
                     <span class="search-result-category">${esc(p.category)}</span>
-                    <span class="search-result-price">${window.bfPriceHtml ? window.bfPriceHtml(p.price) : esc(p.price)}</span>
+                    <span class="search-result-price">${window.bfPriceHtml ? window.bfPriceHtml(p.price) : esc(p.price)}${window.soldOutSkus && window.soldOutSkus[(/^D\d+/.exec(p.name) || [''])[0]] ? ' <b style="letter-spacing:.1em;font-size:10px;color:#b00000">SOLD OUT</b>' : ''}</span>
                 </span>
             </a>
         `).join('');
