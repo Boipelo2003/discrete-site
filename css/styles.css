@@ -2302,3 +2302,12 @@ footer a[href^="mailto:"]:hover {
     .search-result-name { font-size: 11px; }
 }
 
+
+/* --- SOLD OUT products (set live by js/storefront.js from /api/stock) --- */
+.product-card.is-sold-out .product-image img { filter: grayscale(.85); opacity: .55; }
+.sold-out-badge { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 6; background: #000; color: #fff; font: 800 13px/1 system-ui, sans-serif; letter-spacing: .28em; text-transform: uppercase; padding: 12px 22px; white-space: nowrap; pointer-events: none; }
+.add-to-cart:disabled, .add-to-cart:disabled:hover { background: #bdbdbd; border-color: #bdbdbd; color: #fff; cursor: not-allowed; }
+.qty-btn:disabled { opacity: .35; cursor: not-allowed; }
+.is-sold-out .bf-badge { display: none; }
+.bf-sale .is-sold-out [data-bf-now] { text-decoration: none; opacity: 1; }
+.bf-sale .is-sold-out [data-bf-now]::after { display: none; }

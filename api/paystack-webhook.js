@@ -73,8 +73,8 @@ export default async function handler(req, res) {
             const skus = [...new Set((Array.isArray(m.items) ? m.items : []).map(i => skuOf(i && i.name)).filter(x => x && STOCK[x]))];
             if (skus.length) {
                 const st = await stockStatus(skus, { holds: false });
-                const over = skus.filter(x => st[x].sold > st[x].limit);
-                if (over.length) await sendEmail({ to: process.env.OWNER_EMAIL || (process.env.ADMIN_EMAILS || '').split(',')[0], subject: `OVERSOLD: ${over.join(', ')} (order ${ref})`, html: `<p>Order ${esc(ref)} pushed ${esc(over.join(', '))} over its stock limit (${over.map(x => esc(x) + ': ' + st[x].sold + ' sold, limit ' + st[x].limit).join('; ')}). Please contact the latest customer and offer a refund or wait.</p>` });
+                const over = skus.filter(x => STOCK[x].remaining <= 0 || st[x].sold > st[x].limit);
+                if (over.length) await sendEmail({ to: process.env.OWNER_EMAIL || (process.env.ADMIN_EMAILS || '').split(',')[0], subject: `OVERSOLD: ${over.join(', ')} (order ${ref})`, html: `<p>Order ${esc(ref)} pushed ${esc(over.join(', '))} over its stock limit (${over.map(x => STOCK[x].remaining <= 0 ? esc(x) + ': marked SOLD OUT' : esc(x) + ': ' + st[x].sold + ' sold, limit ' + st[x].limit).join('; ')}). Please contact the latest customer and offer a refund or wait.</p>` });
             }
         } catch (err) { console.error('[stock-check]', err.message); }
 

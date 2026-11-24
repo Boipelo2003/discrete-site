@@ -229,32 +229,31 @@
     initWishlist();
 })();
 
-// ── LIVE STOCK for limited-edition products ("Limited — only N" / "Sold out") ──
-// The real limit is enforced on the server (api/stock.js, api/paystack-init.js); this just keeps the shop honest.
+// ── LIVE STOCK: "Sold out" and "Limited — only N" ──
+// The real limit is enforced on the server (api/stock.js, api/paystack-init.js, lib/stock.js); this only keeps the shop honest.
 (function () {
-    var labels = document.querySelectorAll('[data-stock-sku]');
-    if (!labels.length || !window.fetch) return;
+    if (!window.fetch) return;
+    function soldOut(card) {
+        card.classList.add('is-sold-out');
+        var label = card.querySelector('[data-stock-sku]'); if (label) label.textContent = 'Sold out';
+        var im = card.querySelector('.product-image');
+        if (im && !im.querySelector('.sold-out-badge')) { var b = document.createElement('span'); b.className = 'sold-out-badge'; b.textContent = 'Sold out'; im.appendChild(b); }
+        card.querySelectorAll('.add-to-cart, .qty-btn, .size-select').forEach(function (el) { el.disabled = true; });
+        var btn = card.querySelector('.add-to-cart'); if (btn) btn.textContent = 'Sold out';
+    }
     fetch('/api/stock').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
         if (!d) return;
-        labels.forEach(function (el) {
-            var s = d[el.getAttribute('data-stock-sku')];
-            if (!s) return;
-            var card = el.closest('.product-card');
-            if (s.left <= 0) {
-                el.textContent = 'Sold out';
-                if (card) {
-                    card.style.opacity = '.6';
-                    card.querySelectorAll('.add-to-cart, .qty-btn, .size-select').forEach(function (b) { b.disabled = true; });
-                    var btn = card.querySelector('.add-to-cart'); if (btn) btn.textContent = 'Sold out';
-                }
-            } else {
-                el.textContent = 'Limited — only ' + s.left;
-                if (card) {
-                    card.dataset.stockLeft = s.left;
-                    var q = card.querySelector('.qty-value');
-                    if (q && Number(q.textContent) > s.left) q.textContent = s.left;
-                }
-            }
+        window.soldOutSkus = {};
+        Object.keys(d).forEach(function (sku) {
+            var left = d[sku] && d[sku].left;
+            if (typeof left !== 'number') return;
+            if (left <= 0) window.soldOutSkus[sku] = true;
+            var card = document.getElementById('product-' + sku.toLowerCase());
+            if (!card) return;
+            if (left <= 0) { soldOut(card); return; }
+            var label = card.querySelector('[data-stock-sku]'); if (label) label.textContent = 'Limited — only ' + left;
+            card.dataset.stockLeft = left;
+            var q = card.querySelector('.qty-value'); if (q && Number(q.textContent) > left) q.textContent = left;
         });
-    }).catch(function () { /* keep the printed label */ });
+    }).catch(function () { /* keep the page as printed; the server still blocks sold-out items */ });
 })();
