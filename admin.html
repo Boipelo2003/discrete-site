@@ -1172,7 +1172,7 @@ orders.forEach((order, idx) => {
                     <span class="email">${email}</span>
                 </td>
                 <td>
-                    <div class="order-items-list">${itemsDetailHtml || '—'}</div>
+                    <div class="order-items-list">${itemsDetailHtml || '—'}${order.promo ? '<div class="item-meta" style="margin-top:6px;font-weight:700;color:#b00000">' + escapeHtml(order.promo) + '</div>' : ''}</div>
                 </td>
                 <td>${shipHtml}</td>
                 <td><span class="order-total">${formatCurrency(order.total || 0)}</span></td>

@@ -424,7 +424,7 @@
             if (order.customer.phone) m += `*Phone:* ${order.customer.phone}\n`;
             if (order.customer.email) m += `*Email:* ${order.customer.email}\n`;
             m += `*${c.label}:* ${c.text}\n\n*Items:*\n`;
-            m += order.items.map(i => `• ${i.name}${i.color ? ' ' + cap(i.color) : ''} (${i.size}) × ${i.qty} — ${money(i.price * i.qty)}`).join('\n') + '\n\n';
+            m += order.items.map(i => `• ${i.name}${i.color ? ' ' + cap(i.color) : ''} (${i.size}) × ${i.qty} — ${money(i.price * i.qty)}`).join('\n') + '\n' + (order.discount && order.discount.amount ? `• ${order.discount.label} (-${order.discount.percent}%): -${money(order.discount.amount)}\n` : '') + '\n';
             m += `*${deliveryLabel()}:* ${money(t.ship)}\n`;
             if (IS_VAT) m += `*Subtotal (excl. VAT):* ${money(t.exVat)}\n*VAT (15%):* ${money(t.vat)}\n`;
             m += `*Total ${paid ? 'Paid' : ''}${IS_VAT ? ' (incl. VAT)' : ''}:* ${money(t.total)}\n\n`;
@@ -449,6 +449,7 @@
         if (order) {
             const t = totals();
             order.items.forEach(i => addRow(rows, `${i.name}${i.color ? ' · ' + cap(i.color) : ''} (${i.size}) × ${i.qty}`, money(i.price * i.qty)));
+            if (order.discount && order.discount.amount) addRow(rows, `${order.discount.label} (-${order.discount.percent}%)`, '-' + money(order.discount.amount));
             addRow(rows, deliveryLabel(), money(t.ship));
             if (IS_VAT) addRow(rows, 'Includes VAT (15%)', money(t.vat), 'muted');
             addRow(rows, state === 'ok' ? 'Total paid' : 'Total', money(t.total), 'total');
@@ -532,6 +533,7 @@
             y += 18;
         };
         row('Merchandise:', money(itemsTotal), false);
+        if (order.discount && order.discount.amount) row(`${order.discount.label} (-${order.discount.percent}%):`, '-' + money(order.discount.amount), false);
         row(deliveryLabel() + ':', money(t.ship), false);
         if (IS_VAT) {
             y += 4; doc.line(W - margin - 190, y - 12, W - margin, y - 12);
@@ -613,5 +615,6 @@
     if (!orderId) render('none', null); else verify(1);
 })();
 </script>
+    <script src="js/promo.js" defer></script>
 </body>
 </html>

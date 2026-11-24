@@ -1,0 +1,35 @@
+/* css/blackfriday.css - Black Friday look.
+   Loaded ONLY while the sale theme is on (js/promo.js adds it, and removes the need for it afterwards),
+   so after Black Friday the site is exactly as it was. Dates live in lib/promo.js. */
+body.bf-theme { --bf-yellow: #ffd400; --bf-red: #e60000; }
+
+/* announcement bar */
+.bf-theme .announcement-bar { background: var(--bf-yellow); color: #000; border-bottom: 1px solid rgba(0,0,0,.25); }
+.bf-theme .announcement-bar p { color: #000; font-weight: 800; letter-spacing: .16em; }
+
+/* navigation + buttons + footer pick up the accent */
+.bf-theme nav { border-bottom: 2px solid var(--bf-yellow); }
+.bf-theme .btn { background-color: var(--bf-yellow); border-color: var(--bf-yellow); color: #000; font-weight: 800; }
+.bf-theme .btn:hover { background-color: transparent; color: var(--bf-yellow); }
+.bf-theme footer { border-top: 4px solid var(--bf-yellow); }
+
+/* page headings become black bands */
+.bf-theme .manifesto { background: #000; color: #fff; }
+.bf-theme .manifesto h1, .bf-theme .manifesto h2 { color: #fff; }
+.bf-theme .manifesto span { color: var(--bf-yellow); }
+
+/* home page hero banner + countdown */
+.bf-hero { position: relative; z-index: 5; display: inline-flex; flex-direction: column; align-items: center; gap: 6px;
+    background: var(--bf-yellow); color: #000; padding: 16px 28px; margin: 0 auto 22px; text-align: center; max-width: 92%;
+    box-shadow: 0 0 0 3px #000, 0 0 0 5px var(--bf-yellow); }
+.bf-hero-kicker { font-size: 11px; font-weight: 800; letter-spacing: .4em; }
+.bf-hero strong { font-size: clamp(22px, 5vw, 38px); font-weight: 900; letter-spacing: .06em; line-height: 1.05; text-transform: uppercase; }
+.bf-hero-when { font-size: 11px; font-weight: 800; letter-spacing: .22em; }
+.bf-count { font-family: 'Space Mono', ui-monospace, monospace; font-size: 13px; font-weight: 700; letter-spacing: .08em; background: #000; color: var(--bf-yellow); padding: 6px 12px; margin-top: 6px; }
+
+/* sale day: discounted prices (the real price text stays in the page; the new price is drawn after it) */
+.bf-sale [data-bf-now] { text-decoration: line-through; text-decoration-thickness: 1px; opacity: .85; }
+.bf-sale [data-bf-now]::after { content: attr(data-bf-now); display: inline-block; text-decoration: none; margin-left: 8px; color: var(--bf-red); font-weight: 800; opacity: 1; }
+.bf-badge { position: absolute; top: 10px; left: 10px; z-index: 4; background: var(--bf-yellow); color: #000; font: 800 11px/1 system-ui, sans-serif; letter-spacing: .08em; padding: 6px 8px; box-shadow: 0 0 0 2px #000; }
+.bf-sale .search-result-price s { opacity: .55; margin-right: 6px; }
+.bf-sale .search-result-price b { color: var(--bf-red); }
