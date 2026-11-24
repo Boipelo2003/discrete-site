@@ -5,6 +5,8 @@ function esc(str) {
     );
 }
 
+// Influencer links such as https://www.discreteclothing.co.za/?code=KEITU10 remember the code for checkout (the server checks it there).
+try { const _code = new URLSearchParams(location.search).get('code'); if (_code) localStorage.setItem('discreteCode', String(_code).toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 30)); } catch (e) { /* storage blocked */ }
 // Remove the discontinued D08 cap from any cart saved in a visitor's browser.
 try { const _c = JSON.parse(localStorage.getItem('discreteCart')); if (Array.isArray(_c) && _c.some(i => i && /^D08\b/i.test(i.name))) localStorage.setItem('discreteCart', JSON.stringify(_c.filter(i => !(i && /^D08\b/i.test(i.name))))); } catch (e) { /* storage blocked */ }
 // ====================================================

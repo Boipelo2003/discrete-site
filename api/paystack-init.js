@@ -13,8 +13,9 @@ export default async function handler(req, res) {
     const b = req.body || {};
 
     const now = Date.now();                                  // one clock reading, so the sale state is the same everywhere below
-    const q = quoteOrder(b.items, b.shippingId, now);       // null if anything is wrong with the cart
+    const q = quoteOrder(b.items, b.shippingId, now, b.code);   // null if anything is wrong with the cart
     if (!q) return res.status(400).json({ error: 'Your cart could not be priced. Please refresh and try again.' });
+    if (q.codeResult && !q.codeResult.ok) return res.status(400).json({ error: 'That discount code is not valid or has expired. Please remove it and try again.' });
 
     const c = b.customer || {}, col = b.collection || {};
     const email = clean(c.email).toLowerCase(), fullName = clean(c.fullName), phone = clean(c.phone, 20);
@@ -23,6 +24,8 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Please check your contact details.' });
     if (storeName.length < 3) return res.status(400).json({ error: 'Enter the PEP store you will collect from.' });
 
+    // e.g. "Code KEITU10 (Keitu) 10% off (-R45.00)" or "Black Friday 10% off (-R45.00)": saved on the order so you can see who drove each sale
+    const promoText = q.discount ? `${q.discount.label}${q.discount.influencer ? ' (' + q.discount.influencer + ')' : ''} ${q.discount.percent}% off (-R${q.discount.amount.toFixed(2)})` : '';
     const stock = await checkStock(b.items, email);          // limited-edition items: refuse if there is not enough left
     if (!stock.ok) return res.status(400).json({ error: stock.message });
 
@@ -38,7 +41,7 @@ export default async function handler(req, res) {
     const detail = {};
     for (const i of b.items) {
         const k = `${clean(i.name, 70)}|${clean(i.size, 8)}|${i.color ? clean(i.color, 20) : ''}`;
-        const unit = quoteOrder([{ name: i.name }], b.shippingId, now).merchandise;
+        const unit = quoteOrder([{ name: i.name }], b.shippingId, now, b.code).merchandise;
         const d = detail[k] || (detail[k] = { name: clean(i.name, 70), size: clean(i.size, 8), color: i.color ? clean(i.color, 20) : '', quantity: 0, price: unit });
         d.quantity += Number.isInteger(i.quantity) ? i.quantity : 1;
     }
@@ -62,7 +65,8 @@ export default async function handler(req, res) {
                 phone,
                 collect_from: `${storeName}, ${clean(col.town, 60)}, ${clean(col.province, 40)}`,
                 delivery: q.delivery.label,
-                promo: q.discount ? `${q.discount.label} ${q.discount.percent}% off (-R${q.discount.amount.toFixed(2)})` : '',
+                promo: promoText,
+                discount_code: (q.discount && q.discount.code) || '',
                 items: Object.values(detail),
                 cancel_action: `${origin}/cancel.html`,
                 custom_fields: [
@@ -71,7 +75,7 @@ export default async function handler(req, res) {
                     { display_name: 'Collect from', variable_name: 'store', value: `${storeName}, ${clean(col.town, 60)}, ${clean(col.province, 40)}` },
                     { display_name: 'Delivery', variable_name: 'delivery', value: q.delivery.label },
                     { display_name: 'Items', variable_name: 'items', value: itemText },
-                    ...(q.discount ? [{ display_name: 'Promo', variable_name: 'promo', value: `${q.discount.label} ${q.discount.percent}% off (-R${q.discount.amount.toFixed(2)})` }] : []),
+                    ...(q.discount ? [{ display_name: 'Promo', variable_name: 'promo', value: promoText }] : []),
                 ],
             },
         }),
