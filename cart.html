@@ -219,6 +219,7 @@
         <aside class="ct-summary" aria-label="Cart summary">
             <div class="ct-sum-title">Order Summary</div>
             <div class="ct-row"><span>Subtotal</span><span id="ctSub">R0.00</span></div>
+            <div class="ct-row" id="ctDiscRow" style="display:none;color:#b00000;font-weight:700"><span id="ctDiscLabel">Black Friday</span><span id="ctDisc">R0.00</span></div>
             <div class="ct-row"><span>Delivery (PEP PAXI)</span><span id="ctShip">Calculated at checkout</span></div>
             <div class="ct-row total"><span id="ctTotalLabel">Subtotal</span><span id="ctTotal">R0.00</span></div>
             <p class="ct-note" id="ctNote">Delivery is worked out at checkout from what is in your cart. There is no free shipping.</p>
@@ -394,11 +395,15 @@
     function renderSummary() {
         const sub = clientSubtotal();
         const ok = quoteState === 'ok' && quote;
-        const mismatch = ok && Math.abs(quote.merchandise - sub) > 0.009;
+        const listSub = ok ? (quote.listMerchandise != null ? quote.listMerchandise : quote.merchandise) : sub;   // normal prices, before any sale discount
+        const mismatch = ok && Math.abs(listSub - sub) > 0.009;
+        const disc = ok && quote.discount;
         const std = ok && quote.options.find(o => o.id === 'standard');
         const exp = ok && quote.options.find(o => o.id === 'express');
 
-        $('ctSub').textContent = money(ok ? quote.merchandise : sub);
+        $('ctSub').textContent = money(listSub);
+        $('ctDiscRow').style.display = disc ? '' : 'none';
+        if (disc) { $('ctDiscLabel').textContent = disc.label + ' (-' + disc.percent + '%)'; $('ctDisc').textContent = '-' + money(disc.amount); }
         if (ok && std) {
             $('ctShip').textContent = 'from ' + money(Math.min(...quote.options.map(o => o.fee)));
             $('ctTotalLabel').textContent = 'Total from';
@@ -495,5 +500,6 @@
     render();
 })();
 </script>
+    <script src="js/promo.js" defer></script>
 </body>
 </html>

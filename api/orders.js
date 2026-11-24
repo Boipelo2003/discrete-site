@@ -32,6 +32,7 @@ function toOrder(t, status) {
         date: t.paid_at || t.created_at || null,
         customer: { firstName: sp > 0 ? full.slice(0, sp) : full, lastName: sp > 0 ? full.slice(sp + 1) : '', email: (t.customer && t.customer.email) || '', phone: String(m.phone || field(m, 'phone') || '') },
         items: itemsOf(m),
+        promo: String(m.promo || ''),
         shipping: { method: String(m.delivery || field(m, 'delivery') || ''), address: collect ? 'PEP PAXI collection point: ' + collect : '' },
     };
 }

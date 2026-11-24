@@ -200,7 +200,15 @@ function renderCart() {
 
         cartItemsContainer.innerHTML = html;
         cartFooter.style.display = 'block';
-        cartTotalEl.textContent = `R${total.toFixed(2)}`;
+        // Black Friday: show the discounted total (the server charges the same amount; see lib/promo.js)
+        const bfOn = !!(window.BF && window.BF.saleActive);
+        const shownTotal = bfOn ? cart.reduce((s, i) => s + window.BF.unit(parseFloat(i.price)), 0) : total;
+        cartTotalEl.textContent = `R${shownTotal.toFixed(2)}`;
+        let bfNote = document.getElementById('bfMiniNote');
+        if (bfOn) {
+            if (!bfNote) { bfNote = document.createElement('div'); bfNote.id = 'bfMiniNote'; bfNote.style.cssText = 'font-size:11px;font-weight:700;color:#b00000;letter-spacing:.06em;margin-bottom:8px'; cartFooter.insertBefore(bfNote, cartFooter.firstChild); }
+            bfNote.textContent = 'BLACK FRIDAY -' + window.BF.percent + '% APPLIED';
+        } else if (bfNote) { bfNote.remove(); }
 
         document.querySelectorAll('.cart-item-remove').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -541,7 +549,7 @@ document.querySelectorAll('.product-card').forEach(card => {
                 <span class="search-result-name">${esc(p.name)}</span>
                 <span class="search-result-meta">
                     <span class="search-result-category">${esc(p.category)}</span>
-                    <span class="search-result-price">${esc(p.price)}</span>
+                    <span class="search-result-price">${window.bfPriceHtml ? window.bfPriceHtml(p.price) : esc(p.price)}</span>
                 </span>
             </a>
         `).join('');

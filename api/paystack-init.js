@@ -12,7 +12,8 @@ export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
     const b = req.body || {};
 
-    const q = quoteOrder(b.items, b.shippingId);            // null if anything is wrong with the cart
+    const now = Date.now();                                  // one clock reading, so the sale state is the same everywhere below
+    const q = quoteOrder(b.items, b.shippingId, now);       // null if anything is wrong with the cart
     if (!q) return res.status(400).json({ error: 'Your cart could not be priced. Please refresh and try again.' });
 
     const c = b.customer || {}, col = b.collection || {};
@@ -37,7 +38,7 @@ export default async function handler(req, res) {
     const detail = {};
     for (const i of b.items) {
         const k = `${clean(i.name, 70)}|${clean(i.size, 8)}|${i.color ? clean(i.color, 20) : ''}`;
-        const unit = quoteOrder([{ name: i.name }], b.shippingId).merchandise;
+        const unit = quoteOrder([{ name: i.name }], b.shippingId, now).merchandise;
         const d = detail[k] || (detail[k] = { name: clean(i.name, 70), size: clean(i.size, 8), color: i.color ? clean(i.color, 20) : '', quantity: 0, price: unit });
         d.quantity += Number.isInteger(i.quantity) ? i.quantity : 1;
     }
@@ -61,6 +62,7 @@ export default async function handler(req, res) {
                 phone,
                 collect_from: `${storeName}, ${clean(col.town, 60)}, ${clean(col.province, 40)}`,
                 delivery: q.delivery.label,
+                promo: q.discount ? `${q.discount.label} ${q.discount.percent}% off (-R${q.discount.amount.toFixed(2)})` : '',
                 items: Object.values(detail),
                 cancel_action: `${origin}/cancel.html`,
                 custom_fields: [
@@ -69,6 +71,7 @@ export default async function handler(req, res) {
                     { display_name: 'Collect from', variable_name: 'store', value: `${storeName}, ${clean(col.town, 60)}, ${clean(col.province, 40)}` },
                     { display_name: 'Delivery', variable_name: 'delivery', value: q.delivery.label },
                     { display_name: 'Items', variable_name: 'items', value: itemText },
+                    ...(q.discount ? [{ display_name: 'Promo', variable_name: 'promo', value: `${q.discount.label} ${q.discount.percent}% off (-R${q.discount.amount.toFixed(2)})` }] : []),
                 ],
             },
         }),

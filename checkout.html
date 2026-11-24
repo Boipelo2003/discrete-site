@@ -260,6 +260,7 @@
             <div id="oiList"></div>
             <div class="ck-totals">
                 <div class="ck-row"><span>Subtotal</span><span id="subDisp">R 0.00</span></div>
+                <div class="ck-row" id="discRow" style="display:none;color:#b00000;font-weight:700"><span id="discLabel">Black Friday</span><span id="discDisp">R 0.00</span></div>
                 <div class="ck-row"><span id="shipLabel">Shipping</span><span id="shipDisp">R 0.00</span></div>
                 <div class="ck-bag" id="bagNote" hidden></div>
                 <div class="ck-row total"><span>Total</span><span id="grandDisp">R 0.00</span></div>
@@ -450,7 +451,11 @@
     function renderTotals() {
         const opt = selectedOption();
         const ok = quoteState === 'ok' && opt;
-        $('subDisp').textContent = money(ok ? quote.merchandise : clientSub);
+        const listSub = ok ? (quote.listMerchandise != null ? quote.listMerchandise : quote.merchandise) : clientSub;   // normal prices, before any sale discount
+        $('subDisp').textContent = money(listSub);
+        const disc = ok && quote.discount;
+        $('discRow').style.display = disc ? '' : 'none';
+        if (disc) { $('discLabel').textContent = disc.label + ' (-' + disc.percent + '%)'; $('discDisp').textContent = '-' + money(disc.amount); }
         if (!cart.length) {
             $('shipLabel').textContent = 'Shipping'; $('shipDisp').textContent = money(0); $('grandDisp').textContent = money(0);
             $('bagNote').hidden = true; grandTotal = 0;
@@ -512,7 +517,7 @@
 
     function checkPrices() {
         const warn = $('cartWarn');
-        priceMismatch = quoteState === 'ok' && Math.abs(quote.merchandise - clientSub) > 0.009;
+        priceMismatch = quoteState === 'ok' && Math.abs((quote.listMerchandise != null ? quote.listMerchandise : quote.merchandise) - clientSub) > 0.009;
         warn.textContent = '';
         if (priceMismatch) {
             warn.appendChild(document.createTextNode('Some prices in your cart are out of date. Please clear your cart and add the items again. '));
@@ -614,6 +619,7 @@
                 shipping: { address: `PEP PAXI collection point: ${storeName}`, city: v('town'), province: v('province'), postalCode: '' },
                 items: Object.values(groupedCart).map(i => ({ name: i.name, size: i.size, color: i.color || '', qty: i.qty, price: parseFloat(i.price) })),
                 shippingCost: opt.fee, shippingMethod: opt.id, shippingLabel: opt.label, shippingEta: opt.eta,
+                discount: quote && quote.discount ? { label: quote.discount.label, percent: quote.discount.percent, amount: quote.discount.amount } : null,
                 total: amount
             };
             try {
