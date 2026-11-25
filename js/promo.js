@@ -42,7 +42,9 @@
         box.className = 'bf-hero'; box.setAttribute('role', 'note');
         box.innerHTML = '<span class="bf-hero-kicker">BLACK FRIDAY</span><strong>' + Number(cfg.percent) + '% OFF EVERYTHING</strong>' +
             '<span class="bf-hero-when">' + (st.sale ? 'TODAY ONLY' : esc(cfg.saleLabel) + ' ONLY') + '</span><span class="bf-count" id="bfCount"></span>';
-        h.insertBefore(box, h.firstChild);
+        // Put the box right before the title, AFTER the three .hero-bg picture layers: the CSS picks those by
+        // position (.hero-bg:nth-child(1..3)), so nothing may be inserted in front of them.
+        h.insertBefore(box, h.querySelector('h1') || null);
     }
 
     function tick() {
