@@ -161,7 +161,7 @@ nav {
     background-repeat: no-repeat;
     opacity: 0;
     z-index: -2;
-    animation: heroCrossfade 18s infinite;
+    animation: heroCrossfade 15s infinite;     /* 3 pictures x 5 seconds */
 }
 
 .hero-bg::after {
@@ -172,18 +172,18 @@ nav {
 }
 
 .hero-bg:nth-child(1) {
-    background-image: url('../hero1.webp');
+    background-image: url('../hero1.webp?v=20261125');
     animation-delay: 0s;
 }
 
 .hero-bg:nth-child(2) {
-    background-image: url('../hero2.webp');
-    animation-delay: -6s;
+    background-image: url('../hero2.webp?v=20261125');
+    animation-delay: -5s;
 }
 
 .hero-bg:nth-child(3) {
-    background-image: url('../hero3.webp');
-    animation-delay: -12s;
+    background-image: url('../hero3.webp?v=20261125');
+    animation-delay: -10s;
 }
 
 /* Cross-fade: each picture fades in (0-6%) while the previous one fades out (33-39%), so the hero is never empty. */
