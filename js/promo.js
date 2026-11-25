@@ -25,14 +25,35 @@
         return (d ? d + 'D ' : '') + pad(h) + 'H ' + pad(m) + 'M ' + pad(x) + 'S';
     }
 
+    // The scrolling bar is two identical strips that slide sideways. Each strip only needs to be as wide as the
+    // screen: a phone needs ONE copy of the message, a wide laptop needs three. (Making it wider than that is
+    // what made the bar go blank on iPhones: very wide moving strips are not drawn properly there.)
+    var lineHtml = '';
+    function fitBar() {
+        var bar = document.querySelector('.announcement-bar');
+        var track = bar && bar.querySelector('.marquee-track');
+        var ps = track ? track.querySelectorAll('p') : [];
+        if (!lineHtml || ps.length < 2) return;
+        ps.forEach(function (p) { p.innerHTML = lineHtml; });
+        var one = ps[0].getBoundingClientRect().width;               // width of a single copy (0 if the browser cannot measure)
+        var n = one > 0 ? Math.max(1, Math.min(8, Math.ceil((bar.clientWidth + 40) / one))) : 3;
+        if (n > 1) { var html = new Array(n + 1).join(lineHtml); ps.forEach(function (p) { p.innerHTML = html; }); }
+        var strip = ps[0].getBoundingClientRect().width;
+        if (strip > 0) track.style.animationDuration = Math.max(8, Math.round(strip / 70)) + 's';   // about 70px a second on every screen
+    }
+
     function banner(st) {
         var pct = Number(cfg.percent) + '%';
         var parts = st.sale
             ? ['BLACK FRIDAY IS LIVE', pct + ' OFF EVERYTHING', 'TODAY ONLY', 'DELIVERY VIA PEP PAXI']
             : ['BLACK FRIDAY', pct + ' OFF EVERYTHING', esc(cfg.saleLabel) + ' ONLY', 'DELIVERY VIA PEP PAXI'];
-        var line = parts.join(' &nbsp;|&nbsp; ') + ' &nbsp;|&nbsp; ';
-        var html = line + line + line;
-        document.querySelectorAll('.announcement-bar .marquee-track p').forEach(function (p) { p.innerHTML = html; });
+        lineHtml = parts.join(' &nbsp;|&nbsp; ') + ' &nbsp;|&nbsp; ';
+        fitBar();
+        if (!banner.wired) {
+            banner.wired = true;
+            var t0; window.addEventListener('resize', function () { clearTimeout(t0); t0 = setTimeout(fitBar, 200); });   // rotate the phone, resize the window
+            if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitBar);                                   // text is wider once the real font loads
+        }
     }
 
     function hero(st) {
@@ -82,6 +103,7 @@
             var l = document.createElement('link'); l.id = 'bfCss'; l.rel = 'stylesheet'; l.href = '/css/blackfriday.css'; document.head.appendChild(l);
         }
         document.body.classList.add('bf-theme');
+        var tc = document.querySelector('meta[name="theme-color"]'); if (tc) tc.setAttribute('content', '#ffd400');   // phone status bar matches the yellow bar
         banner(st); hero(st);
         if (st.sale) {
             document.body.classList.add('bf-sale');

@@ -1002,7 +1002,6 @@ footer {
     width: max-content;
     white-space: nowrap;
     animation: continuous-loop 20s linear infinite;
-    will-change: transform; /* Signals optimization pathways directly to browser engine */
 }
 
 .announcement-bar p {
