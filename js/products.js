@@ -6,7 +6,7 @@ const ALL_PRODUCTS = [
     { name: 'D14 — The Brand Carrier Tee',       price: 'R450',  category: 'T-Shirts',    section: 't-shirts',    page: 't-shirts.html' },
     { name: 'D15 — The Founder’s Mark Tee',      price: 'R450',  category: 'T-Shirts',    section: 't-shirts',    page: 't-shirts.html' },
     { name: 'D16 — The Unseen Archive Tee',      price: 'R450',  category: 'T-Shirts',    section: 't-shirts',    page: 't-shirts.html' },
-    { name: 'D17 — Discrete Check Flannel',      price: 'R500',  category: 'Shirts',      section: 'new-arrivals', page: 'new-arrivals.html' },
+    { name: 'D17 — Discrete Check Flannel',      price: 'R500',  category: 'Shirts',      section: 't-shirts',    page: 't-shirts.html' },
     { name: 'D01 — Discrete Earth Guardian Tee', price: 'R400',  category: 'T-Shirts',    section: 't-shirts',    page: 't-shirts.html' },
     { name: 'D02 — Discrete Archive Tee',        price: 'R400',  category: 'T-Shirts',    section: 't-shirts',    page: 't-shirts.html' },
     { name: 'D05 — Discrete Petal Code Tee',     price: 'R400',  category: 'T-Shirts',    section: 't-shirts',    page: 't-shirts.html' },
