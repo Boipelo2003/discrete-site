@@ -1,0 +1,24 @@
+/* css/ad.css - the one-day advert pop-up (loaded by js/ad.js only while the ad is on) */
+.dsc-ad-overlay { position: fixed; inset: 0; z-index: 50000; display: flex; align-items: center; justify-content: center; padding: 16px;
+    background: rgba(0, 0, 0, .8); animation: dscAdFade .35s ease both; overflow-y: auto; }
+.dsc-ad { position: relative; width: min(100%, 440px); max-height: 100%; overflow-y: auto; box-sizing: border-box; padding: 34px 26px 24px;
+    background: #000; color: #fff; text-align: center; border-top: 6px solid #ffd400; box-shadow: 0 0 0 1px #2a2a2a, 0 24px 60px rgba(0, 0, 0, .6);
+    animation: dscAdRise .4s ease both; font-family: 'Space Mono', ui-monospace, monospace; }
+.dsc-ad-tag { position: absolute; top: 14px; left: 14px; font-size: 10px; font-weight: 700; letter-spacing: .2em; padding: 4px 8px; border: 1px solid #777; color: #bbb; }
+.dsc-ad-close { position: absolute; top: 6px; right: 6px; width: 44px; height: 44px; display: grid; place-items: center; background: none; border: 0; color: #fff; font-size: 30px; line-height: 1; cursor: pointer; }
+.dsc-ad-close:hover { color: #ffd400; }
+.dsc-ad-kicker { margin: 10px 0 12px; font-size: 11px; font-weight: 700; letter-spacing: .14em; color: #ffd400; }
+.dsc-ad-head { margin: 0; font-family: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif; font-weight: 400; font-size: clamp(46px, 13vw, 68px); line-height: .95; letter-spacing: .02em; color: #fff; }
+.dsc-ad-head em { font-style: normal; color: #ffd400; }
+.dsc-ad-lead { margin: 12px 0 0; font-size: 15px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.dsc-ad-body { margin: 14px 0 22px; font-size: 13px; line-height: 1.65; color: #d6d6d6; }
+.dsc-ad-actions { display: flex; flex-direction: column; gap: 10px; }
+.dsc-ad-btn { display: block; padding: 15px 12px; font: 700 13px 'Space Mono', ui-monospace, monospace; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; text-align: center; border: 2px solid #ffd400; }
+.dsc-ad-btn--primary { background: #ffd400; color: #000; }
+.dsc-ad-btn--primary:hover { background: #fff; border-color: #fff; }
+.dsc-ad-btn--ghost { background: transparent; color: #fff; border-color: #fff; }
+.dsc-ad-btn--ghost:hover { background: #fff; color: #000; }
+.dsc-ad-fine { margin: 16px 0 0; font-size: 10.5px; letter-spacing: .08em; color: #8a8a8a; }
+@keyframes dscAdFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dscAdRise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .dsc-ad-overlay, .dsc-ad { animation: none; } }
